@@ -1,4 +1,4 @@
-import User from "../models/userModel.js";
+import User from "../models/User.js";
 import { generateToken } from "../lib/utils.js";
 import bcrypt from "bcryptjs";
 
@@ -23,7 +23,6 @@ export const signup = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
 
     const newUser = new User({
       fullName,
@@ -88,6 +87,52 @@ export const logout = async (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.error("Error in logout route:", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  const { bio, skills } = req.body;
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { bio, skills },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error in updateProfile route:", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.error("Error in checkAuth route:", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in getProfile route:", error.message);
     res.status(500).json({ message: "Server Error" });
   }
 };
