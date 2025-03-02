@@ -4,11 +4,16 @@ import connectDB  from "./lib/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
-dotenv.config();
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 
+dotenv.config();
 const PORT = process.env.PORT;
 
 app.use("/api/auth", authRoutes );
