@@ -10,7 +10,7 @@ export const getAllJobs = async (req, res) => {
   }
 };
 
-export const getJob = async (req, res) => {
+export const getUserJobs = async (req, res) => {
   try {
     const jobs = await Job.find({ employer: req.user._id }); // employer alanı ile filtreleme
     res.status(200).json(jobs);
