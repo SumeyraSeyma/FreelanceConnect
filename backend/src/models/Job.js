@@ -7,6 +7,10 @@ const jobSchema = new mongoose.Schema({
     employer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     status: { type: String, enum: ["open", "closed"], default: "open" },
+    time: { type: String, enum: ["full-time", "part-time"], default: "full-time" },
+    remote: { type: Boolean, default: false },
+    skills: [{ type: String }],
+    city: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 });
 
