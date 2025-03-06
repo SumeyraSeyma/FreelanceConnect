@@ -10,7 +10,7 @@ const jobSchema = new mongoose.Schema({
     time: { type: String, enum: ["full-time", "part-time"], default: "full-time" },
     remote: { type: Boolean, default: false },
     skills: [{ type: String }],
-    city: { type: String, required: true },
+    location: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 });
 

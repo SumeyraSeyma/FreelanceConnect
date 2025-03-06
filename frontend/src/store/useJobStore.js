@@ -4,12 +4,39 @@ import { axiosInstance } from "../lib/axios";
 export const useJobStore = create((set) => ({
   jobs: [],
   userJobs: [],
+  filters: {
+    remote: false,
+    budget: false,
+    partTime: false,
+    fullTime: false,
+    city: "",
+    skill: "",
+  },
 
   isFetchingJobs: false,
   isFetchingUserJobs: false,
   isCreatingJob: false,
   isDeletingJob: false,
   isUpdatingJob: false,
+
+  setFilter: (filterKey, value) => {
+    set((state) => ({
+      filters: { ...state.filters, [filterKey]: value },
+    }));
+  },
+
+  clearFilters: () => {
+    set({
+      filters: {
+        remote: false,
+        budget: false,
+        partTime: false,
+        fullTime: false,
+        city: "",
+        skill: "",
+      },
+    });
+  },
 
   fetchAllJobs: async () => {
     set({ isFetchingJobs: true });
