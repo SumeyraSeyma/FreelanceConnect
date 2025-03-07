@@ -5,8 +5,10 @@ import authRoutes from "./routes/authRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: "http://localhost:3000",

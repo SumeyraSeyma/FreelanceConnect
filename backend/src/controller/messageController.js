@@ -1,4 +1,18 @@
 import Message from "../models/Message.js";
+import User from "../models/User.js";
+
+export const getAllUsers = async (req, res) => {
+  try {
+    // Get all users except the logged in user
+    const users = await User.find({ _id: { $ne: req.user._id } }).select(
+      "-password"
+    );
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error("Error in getAllUsers route:", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+}
 
 export const getMessages = async (req, res) => {
   try {
