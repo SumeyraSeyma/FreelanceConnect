@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     bio: { type: String },
     skills: [{ type: String }],
     rating: { type: Number, default: 0 },
+    image: { type: String },
 });
 
 const User = mongoose.model("User", userSchema);

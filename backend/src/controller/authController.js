@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import { generateToken } from "../lib/utils.js";
 import bcrypt from "bcryptjs";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password, role } = req.body;
@@ -92,22 +93,35 @@ export const logout = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { bio, skills } = req.body;
-  const userId = req.user._id;
-
   try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const { image, bio, skills } = req.body;
+    const userId = req.user._id;
+
+    const updateFields = {};
+
+    if (bio !== undefined) {
+      updateFields.bio = bio;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { bio, skills },
-      { new: true, runValidators: true }
-    );
+    if (skills !== undefined) {
+      updateFields.skills = skills;
+    }
 
-    res.status(200).json(updatedUser);
+    if (image) {
+      const uploadResponse = await cloudinary.uploader.upload(image);
+      updateFields.image = uploadResponse.secure_url;
+    }
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: "No valid fields to update" });
+    }
+
+    // Kullanıcının sadece değişen alanlarını güncelle
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+    });
+
+    res.status(200).json({ updatedUser });
   } catch (error) {
     console.error("Error in updateProfile route:", error.message);
     res.status(500).json({ message: "Server Error" });
