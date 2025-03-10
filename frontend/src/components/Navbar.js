@@ -1,4 +1,4 @@
-import { LogOut, User, Megaphone } from "lucide-react";
+import { LogOut, User, Megaphone, Briefcase } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 
@@ -23,6 +23,10 @@ const Navbar = () => {
           <div className="flex items-center gap-2">
             {authUser && (
               <>
+                <Link to={"/jobs"} className="btn btn-sm gap-2">
+                  <Briefcase className="size-5" />
+                  <span className="hidden sm:inline">My Jobs</span>
+                </Link>
                 <Link to={"/profile"} className={`btn btn-sm gap-2`}>
                   <User className="size-5" />
                   <span className="hidden sm:inline">Profile</span>

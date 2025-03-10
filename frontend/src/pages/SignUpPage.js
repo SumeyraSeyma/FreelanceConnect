@@ -15,12 +15,10 @@ import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [role] = useState("freelancer");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
-    role: "freelancer",
   });
 
   const { signUp, isSigningUp } = useAuthStore();
@@ -40,12 +38,10 @@ const SignUpPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) return;
 
-    const success = validateForm();
-
-    if (success === true) {
-      signUp({ ...formData, role }); // role değerini de gönderiyoruz
-    }
+    signUp({ ...formData });
   };
 
   return (
@@ -132,26 +128,6 @@ const SignUpPage = () => {
                   )}
                 </button>
               </div>
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Role</span>
-              </label>
-              <label className="select rounded-md mt-1 bg-slate-800 select-bordered w-full">
-                <select
-                  value={formData.role}
-                  onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value })
-                  }
-                >
-                  <option className="bg-slate-800" value="freelancer">
-                    Freelancer
-                  </option>
-                  <option className="bg-slate-800" value="employer">
-                    Employer
-                  </option>
-                </select>
-              </label>
             </div>
 
             <button

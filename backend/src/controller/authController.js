@@ -7,7 +7,7 @@ export const signup = async (req, res) => {
   const { fullName, email, password, role } = req.body;
 
   try {
-    if (!fullName || !email || !password || !role) {
+    if (!fullName || !email || !password) {
       return res.status(400).json({ message: "Please fill in all fields" });
     }
 
@@ -29,7 +29,6 @@ export const signup = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-      role,
     });
 
     if (newUser) {
@@ -41,7 +40,6 @@ export const signup = async (req, res) => {
         _id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
-        role: newUser.role,
       });
     }
   } catch (error) {

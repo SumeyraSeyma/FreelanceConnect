@@ -27,15 +27,3 @@ export const protectRoute = async (req, res, next) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-export const checkEmployer = async (req, res, next) => {
-  try {
-    if (req.user.role !== "employer") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    next();
-  } catch (error) {
-    console.error("Error in checkEmployer middleware:", error.message);
-    res.status(500).json({ message: "Server Error" });
-  }
-};

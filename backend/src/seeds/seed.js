@@ -29,9 +29,11 @@ const seedDatabase = async () => {
         fullName: faker.person.fullName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
-        role: faker.helpers.arrayElement(["freelancer", "employer"]),
         bio: faker.lorem.sentence(),
-        skills: faker.helpers.arrayElements(["JavaScript", "Python", "React"], 3),
+        skills: faker.helpers.arrayElements(
+          ["JavaScript", "Python", "React"],
+          3
+        ),
         rating: faker.number.float({ min: 0, max: 5, precision: 0.1 }),
       });
     }
@@ -40,25 +42,32 @@ const seedDatabase = async () => {
 
     let jobs = [];
     for (let i = 0; i < 10; i++) {
-      const employer = faker.helpers.arrayElement(createdUsers.filter(user => user.role === "employer"));
-      
+      const employer = faker.helpers.arrayElement(createdUsers);
+
       jobs.push({
         title: faker.person.jobTitle(),
         description: faker.lorem.paragraph(),
         budget: faker.number.int({ min: 500, max: 10000 }),
         employer: employer._id,
-        applicants: faker.helpers.arrayElements(createdUsers.filter(user => user.role === "freelancer"), faker.number.int({ min: 1, max: 5 })).map(user => user._id),
+        applicants: faker.helpers
+          .arrayElements(
+            createdUsers.filter((user) => user._id !== employer._id),
+            faker.number.int({ min: 1, max: 5 })
+          )
+          .map((user) => user._id),
         status: faker.helpers.arrayElement(["open", "closed"]),
         time: faker.helpers.arrayElement(["full-time", "part-time"]),
         remote: faker.datatype.boolean(),
-        skills: faker.helpers.arrayElements(["JavaScript", "React", "Node.js"], 3),
+        skills: faker.helpers.arrayElements(
+          ["JavaScript", "React", "Node.js", "Python"],
+          3
+        ),
         location: faker.location.city(),
       });
     }
 
     await Job.insertMany(jobs);
     console.log("İş ilanları oluşturuldu!");
-
   } catch (error) {
     console.error("Seeding sırasında hata oluştu:", error);
   } finally {
