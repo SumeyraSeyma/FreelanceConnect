@@ -21,7 +21,7 @@ export const getUserJobs = async (req, res) => {
 };
 
 export const createJob = async (req, res) => {
-  const { title, description, budget, status, location } = req.body;
+  const { title, description, budget, status, location, skills } = req.body;
   const employer = req.user._id;
   try {
     const job = await Job.create({
@@ -31,6 +31,7 @@ export const createJob = async (req, res) => {
       employer,
       status,
       location,
+      skills,
     });
     res.status(201).json(job);
   } catch (error) {
