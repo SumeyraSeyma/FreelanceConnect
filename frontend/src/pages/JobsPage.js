@@ -30,6 +30,9 @@ const JobManager = () => {
     budget: "",
     status: "open",
     skills: [],
+    remote: false,
+    time:"full-time",
+    applicants:[]
   });
   const [search, setSearch] = useState("");
   const [editingJob, setEditingJob] = useState(null);
@@ -39,7 +42,9 @@ const JobManager = () => {
       !newJob.title ||
       !newJob.description ||
       !newJob.location ||
-      !newJob.budget
+      !newJob.budget ||
+      !newJob.time ||
+      !newJob.remote
     ) {
       toast.error("Please fill all the required fields!");
       return;
@@ -59,6 +64,9 @@ const JobManager = () => {
       budget: "",
       status: "open",
       skills: [],
+      remote: false,
+      time:"full-time",
+      applicants:[]
     });
     document.getElementById("modal_add").close();
   };
@@ -92,7 +100,10 @@ const JobManager = () => {
       job.title.toLowerCase().includes(search.toLowerCase()) ||
       job.description.toLowerCase().includes(search.toLowerCase()) ||
       job.location.toLowerCase().includes(search.toLowerCase()) ||
-      job.skills.join(", ").toLowerCase().includes(search.toLowerCase())
+      job.skills.join(", ").toLowerCase().includes(search.toLowerCase()) ||
+      job.time.toLowerCase().includes(search.toLowerCase()) ||
+      job.remote.toLowerCase().includes(search.toLowerCase())
+
   );
 
   return (
@@ -131,6 +142,9 @@ const JobManager = () => {
                   <th className="p-3 text-left">Location</th>
                   <th className="p-3 text-left">Budget</th>
                   <th className="p-3 text-right">Skills</th>
+                  <th className="p-3 text-right">Time</th>
+                  <th className="p-3 text-right">Remote</th>
+                  <th className="p-3 text-right">Applicants</th>
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -142,6 +156,9 @@ const JobManager = () => {
                     <td className="p-3">{job.location}</td>
                     <td className="p-3">{job.budget}</td>
                     <td className="p-3 text-right">{job.skills.join(", ")}</td>
+                    <td className="p-3 text-right">{job.time}</td>
+                    <td className="p-3 text-right">{job.remote ? "Yes" : "No"}</td>
+                    <td className="p-3 text-right">{job.applicants.length}</td>
                     <td className="p-3 text-right">
                       <button
                         className="bg-blue-800 px-3 py-1 rounded mr-2"
@@ -218,6 +235,42 @@ const JobManager = () => {
                 })
               }
             />
+                        {/* Full-time / Part-time Checkbox */}
+                        <div className="flex gap-4 my-4">
+              <div>
+                <input
+                  type="radio"
+                  id="full-time"
+                  name="time"
+                  value="full-time"
+                  checked={newJob.time === "full-time"}
+                  onChange={(e) => setNewJob({ ...newJob, time: e.target.value })}
+                />
+                <label htmlFor="full-time" className="ml-2">Full-time</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="part-time"
+                  name="time"
+                  value="part-time"
+                  checked={newJob.time === "part-time"}
+                  onChange={(e) => setNewJob({ ...newJob, time: e.target.value })}
+                />
+                <label htmlFor="part-time" className="ml-2">Part-time</label>
+              </div>
+            </div>
+
+            {/* Remote Checkbox */}
+            <div className="flex gap-4 my-4">
+              <input
+                type="checkbox"
+                id="remote"
+                checked={newJob.remote}
+                onChange={() => setNewJob({ ...newJob, remote: !newJob.remote })}
+              />
+              <label htmlFor="remote" className="ml-2">Remote</label>
+            </div>
 
             <div className="flex gap-2 mt-4">
               <button
@@ -290,6 +343,57 @@ const JobManager = () => {
                     })
                   }
                 />
+                {/* Full-time / Part-time Checkbox */}
+                <div className="flex gap-4 my-4">
+                  <div>
+                    <input
+                      type="radio"
+                      id="full-time"
+                      name="time"
+                      value="full-time"
+                      checked={editingJob?.time === "full-time"}
+                      onChange={(e) =>
+                        setEditingJob({
+                          ...editingJob,
+                          time: e.target.value,
+                        })
+                      }
+                    />
+                    <label htmlFor="full-time" className="ml-2">Full-time</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="part-time"
+                      name="time"
+                      value="part-time"
+                      checked={editingJob?.time === "part-time"}
+                      onChange={(e) =>
+                        setEditingJob({
+                          ...editingJob,
+                          time: e.target.value,
+                        })
+                      }
+                    />
+                    <label htmlFor="part-time" className="ml-2">Part-time</label>
+                  </div>
+                </div>
+
+                {/* Remote Checkbox */}
+                <div className="flex gap-4 my-4">
+                  <input
+                    type="checkbox"
+                    id="remote"
+                    checked={editingJob?.remote}
+                    onChange={() =>
+                      setEditingJob({
+                        ...editingJob,
+                        remote: !editingJob.remote,
+                      })
+                    }
+                  />
+                  <label htmlFor="remote" className="ml-2">Remote</label>
+                </div>
 
                 <div className="flex gap-2 mt-4">
                   <button

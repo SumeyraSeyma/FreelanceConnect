@@ -18,6 +18,7 @@ export const useJobStore = create((set) => ({
   isCreatingJob: false,
   isDeletingJob: false,
   isUpdatingJob: false,
+  isApplyingJob: false,
 
   setFilter: (filterKey, value) => {
     set((state) => ({
@@ -123,6 +124,32 @@ export const useJobStore = create((set) => ({
       );
     } finally {
       set({ isUpdatingJob: false });
+    }
+  },
+
+  applyJob: async (jobId) => {
+    set({ isApplyingJob: true });
+    try {
+      const response = await axiosInstance.post(`/jobs/${jobId}/apply`);
+      set((state) => ({
+        jobs: state.jobs.map((job) =>
+          job._id === jobId ? { ...job, applicants: [...job.applicants, response.data.applicant] } : job
+        ),
+        userApplications: [...state.userApplications, response.data.job], // Kullanıcının başvurduğu işlere ekle
+      }));
+    } catch (error) {
+      console.error("Error applying for job:", error.response?.data?.message || error.message);
+    } finally {
+      set({ isApplyingJob: false });
+    }
+  },
+
+  fetchJobWithApplicants: async (jobId) => {
+    try {
+      const response = await axiosInstance.get(`/jobs/${jobId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching job details:", error.response?.data?.message || error.message);
     }
   },
 }));
