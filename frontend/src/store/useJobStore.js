@@ -11,6 +11,7 @@ export const useJobStore = create((set) => ({
     fullTime: false,
     city: "",
     skill: "",
+    status: "",
   },
 
   isFetchingJobs: false,
@@ -35,6 +36,7 @@ export const useJobStore = create((set) => ({
         fullTime: false,
         city: "",
         skill: "",
+        status: "",
       },
     });
   },

@@ -97,7 +97,19 @@ const FilterSidebar = () => {
             )}
           </select>
         </label>
-
+        {/* Status Filter */}
+        <label className="flex flex-col mb-5">
+          <span className="font-medium">Status</span>
+          <select
+            value={filters.status}
+            onChange={(e) => setFilter("status", e.target.value)}
+            className="border rounded-md p-2 bg-slate-800"
+          >
+            <option value="">Select status</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
         {/* Clear Filters Button */}
         <button
           onClick={clearFilters}

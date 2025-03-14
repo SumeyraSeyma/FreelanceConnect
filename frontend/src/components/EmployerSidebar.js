@@ -10,6 +10,10 @@ const Sidebar = () => {
     getUsers();
   }, [getUsers]);
 
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
+
   useEffect(() => {
     if (users.length > 0) {
       const shuffledUsers = [...users].sort(() => Math.random() - 0.5);
@@ -34,15 +38,15 @@ const Sidebar = () => {
             >
               <img
                 className="w-10 h-10 rounded-full"
-                src="https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
+                src={user.image || "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg" }
                 alt={user.fullName}
               />
               <div className="flex flex-col justify-center">
-                <span className="ml-2 block items-center text-white font-normal text-center">
+                <span className="min-w-56 ml-2 block items-center text-white font-normal text-center">
                   {user.fullName}
                 </span>
                 <span className="ml-2 italic block items-center text-white font-light text-center">
-                  {user.bio}
+                  {truncateText(user.bio || "", 40)}
                 </span>
               </div>
             </li>

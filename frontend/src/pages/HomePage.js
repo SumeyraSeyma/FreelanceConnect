@@ -27,7 +27,7 @@ const HomePage = () => {
         <FilteredJobList />
 
         {/* Sağ Sidebar */}
-        <div className="w-3/12 rounded-sm shadow-2xl p-4">
+        <div className="hidden lg:block w-3/12 rounded-sm shadow-2xl p-4">
           <EmployerSidebar />
         </div>
       </div>

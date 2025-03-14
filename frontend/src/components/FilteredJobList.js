@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useJobStore } from "../store/useJobStore";
 
 const FilteredJobList = () => {
@@ -6,7 +6,7 @@ const FilteredJobList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const truncateText = (text, maxLength) => {
+  const truncateText = (text = "", maxLength) => {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
@@ -16,6 +16,12 @@ const FilteredJobList = () => {
     if (filters.fullTime && job.time !== "full-time") return false;
     if (filters.budget && job.budget < filters.budget) return false;
     if (filters.city && filters.city !== "" && job.location !== filters.city)
+      return false;
+    if (
+      filters.status &&
+      filters.status !== "" &&
+      job.status !== filters.status
+    )
       return false;
     if (
       filters.skill &&
@@ -30,6 +36,15 @@ const FilteredJobList = () => {
   });
 
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]); // Reset current page when filters change
+
+  if (currentPage > totalPages && totalPages > 0) {
+    setCurrentPage(1);
+  }
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedJobs = filteredJobs.slice(
     startIndex,
@@ -37,14 +52,17 @@ const FilteredJobList = () => {
   );
 
   return (
-    <div className="flex-1 mx-4 p-4 shadow-md">
+    <div className="relative flex-1 mx-4 p-4 shadow-md">
       <h1 className="text-2xl font-semibold text-center mb-4">Latest Jobs</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {paginatedJobs.length > 0 ? (
           paginatedJobs.map((job) => (
-            <div key={job.id} className="rounded-md shadow-white shadow-sm p-4 flex flex-col h-full">
-              <h2 className="text-xl font-semibold">{job.title}</h2>
+            <div
+              key={job.id}
+              className="rounded-md shadow-white shadow-sm p-4 flex flex-col h-full"
+            >
+              <h2 className="text-xl font-semibold min-h-14">{job.title}</h2>
               {job.skills.length > 0 ? (
                 <div className="flex gap-2 mt-2 mb-2">
                   {job.skills.map((skill) => (
@@ -59,13 +77,15 @@ const FilteredJobList = () => {
               ) : (
                 <span className="text-gray-400">No skills required</span>
               )}
-              <span className="italic flex-grow">
+              <span className="italic flex-grow inline-block min-h-20">
                 {truncateText(job.description, 90)}
               </span>
               <div className="flex justify-between items-center">
-                <span className="shadow-rose-950 shadow-md p-2">{job.status}</span>
+                <span className="shadow-rose-950 shadow-md p-2">
+                  {job.status}
+                </span>
                 <button className="bg-rose-950 text-white px-4 py-2 rounded-md">
-                  Apply
+                  Review
                 </button>
               </div>
             </div>
@@ -76,7 +96,7 @@ const FilteredJobList = () => {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-6">
+        <div className="xl:absolute xl:bottom-4 xl:ml-48 flex justify-center items-center gap-4 mt-6">
           <button
             className="px-4 py-2 bg-rose-950 text-white rounded-md disabled:bg-gray-400"
             disabled={currentPage === 1}
