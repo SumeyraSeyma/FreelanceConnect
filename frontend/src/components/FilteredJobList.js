@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useJobStore } from "../store/useJobStore";
+import { Link } from "react-router-dom";
 
 const FilteredJobList = () => {
   const { jobs, filters } = useJobStore();
@@ -10,7 +11,7 @@ const FilteredJobList = () => {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
-  const filteredJobs = jobs.filter((job) => {
+  const filteredJobs = (jobs ?? []).filter((job) => {
     if (filters.remote && !job.remote) return false;
     if (filters.partTime && job.time !== "part-time") return false;
     if (filters.fullTime && job.time !== "full-time") return false;
@@ -41,9 +42,11 @@ const FilteredJobList = () => {
     setCurrentPage(1);
   }, [filters]); // Reset current page when filters change
 
-  if (currentPage > totalPages && totalPages > 0) {
-    setCurrentPage(1);
-  }
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(1);
+    }
+  }, [totalPages, currentPage]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedJobs = filteredJobs.slice(
@@ -62,12 +65,15 @@ const FilteredJobList = () => {
               key={job.id}
               className="rounded-md shadow-white shadow-sm p-4 flex flex-col h-full"
             >
-              <h2 className="text-xl font-semibold min-h-14">{job.title}</h2>
+              <Link to={`/jobs/${job._id}`}>
+                <h2 className="text-xl font-semibold min-h-14">{job.title}</h2>
+              </Link>
+
               {job.skills.length > 0 ? (
                 <div className="flex gap-2 mt-2 mb-2">
-                  {job.skills.map((skill) => (
+                  {job.skills.map((skill, index) => (
                     <span
-                      key={skill}
+                      key={index}
                       className="bg-gray-300 text-gray-800 px-2 py-1 rounded-md"
                     >
                       {skill}
@@ -84,9 +90,6 @@ const FilteredJobList = () => {
                 <span className="shadow-rose-950 shadow-md p-2">
                   {job.status}
                 </span>
-                <button className="bg-rose-950 text-white px-4 py-2 rounded-md">
-                  Review
-                </button>
               </div>
             </div>
           ))

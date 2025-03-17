@@ -94,11 +94,11 @@ export const updateJob = async (req, res) => {
 };
 
 export const applyJob = async (req, res) => {
-  const { jobId } = req.params;
+  const { id } = req.params;
   const applicantId = req.user._id; 
 
   try {
-    const job = await Job.findById(jobId);
+    const job = await Job.findById(id);
     
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
@@ -119,10 +119,11 @@ export const applyJob = async (req, res) => {
 };
 
 export const getJobWithApplicants = async (req, res) => {
-  const { jobId } = req.params;
+  const { id } = req.params;
+  console.log("Requested jobId:", id);
 
   try {
-    const job = await Job.findById(jobId).populate("applicants", "name email"); // Başvuran kişilerin adını ve e-postasını getir
+    const job = await Job.findById(id).populate("applicants", "name email"); // Başvuran kişilerin adını ve e-postasını getir
 
     if (!job) {
       return res.status(404).json({ message: "Job not found" });

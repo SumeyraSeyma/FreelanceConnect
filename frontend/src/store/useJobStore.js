@@ -129,13 +129,13 @@ export const useJobStore = create((set) => ({
     }
   },
 
-  applyJob: async (jobId) => {
+  applyJob: async (id) => {
     set({ isApplyingJob: true });
     try {
-      const response = await axiosInstance.post(`/jobs/${jobId}/apply`);
+      const response = await axiosInstance.post(`/jobs/${id}/apply`);
       set((state) => ({
         jobs: state.jobs.map((job) =>
-          job._id === jobId ? { ...job, applicants: [...job.applicants, response.data.applicant] } : job
+          job._id === id ? { ...job, applicants: [...job.applicants, response.data.applicant] } : job
         ),
         userApplications: [...state.userApplications, response.data.job], // Kullanıcının başvurduğu işlere ekle
       }));
@@ -146,9 +146,9 @@ export const useJobStore = create((set) => ({
     }
   },
 
-  fetchJobWithApplicants: async (jobId) => {
+  fetchJobWithApplicants: async (id) => {
     try {
-      const response = await axiosInstance.get(`/jobs/${jobId}`);
+      const response = await axiosInstance.get(`/jobs/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching job details:", error.response?.data?.message || error.message);
