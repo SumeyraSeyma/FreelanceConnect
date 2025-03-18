@@ -11,7 +11,7 @@ export default function SwiperCarousel() {
         autoplay={{ delay: 4000, disableOnInteraction: false }}
         loop={true}
         spaceBetween={30} // İstersen artır
-        className="w-full mt-20 h-96"
+        className="w-full h-96"
       >
         <SwiperSlide>
           <img

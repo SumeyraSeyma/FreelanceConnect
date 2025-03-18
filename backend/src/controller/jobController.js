@@ -120,10 +120,11 @@ export const applyJob = async (req, res) => {
 
 export const getJobWithApplicants = async (req, res) => {
   const { id } = req.params;
-  console.log("Requested jobId:", id);
 
   try {
-    const job = await Job.findById(id).populate("applicants", "name email"); // Başvuran kişilerin adını ve e-postasını getir
+    const job = await Job.findById(id)
+      .populate("applicants", "fullName email") // Başvuranların adını ve e-postasını getir
+      .populate("employer", "fullName"); // İşverenin adını getir
 
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
@@ -135,5 +136,4 @@ export const getJobWithApplicants = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
 

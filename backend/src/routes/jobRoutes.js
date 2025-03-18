@@ -10,7 +10,7 @@ router.post("/", protectRoute, createJob);
 router.delete("/:id",protectRoute, deleteJob);
 router.put("/:id",protectRoute, updateJob);
 router.get("/:id",protectRoute, getJobWithApplicants);
-router.put("/:id/apply",protectRoute, applyJob);
+router.post("/:id/apply",protectRoute, applyJob);
 
 export default router;
 

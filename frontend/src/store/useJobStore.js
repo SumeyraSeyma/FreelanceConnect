@@ -4,6 +4,7 @@ import { axiosInstance } from "../lib/axios";
 export const useJobStore = create((set) => ({
   jobs: [],
   userJobs: [],
+  userApplications : [],
   filters: {
     remote: false,
     budget: false,
