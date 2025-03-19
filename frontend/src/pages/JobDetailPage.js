@@ -114,29 +114,30 @@ const JobDetail = () => {
           </div>
 
           {/* Applicants */}
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Applicants
-            </h2>
-            {job.applicants.length > 0 ? (
-              <ul className="list-disc pl-5 space-y-2">
-                {job.applicants.map((applicant) => (
-                  <li key={applicant._id} className="text-gray-700">
-                    <span className="font-medium">
-                      {applicant.fullName || "Name Not Specified"}
-                    </span>
-                    <span className="text-gray-500">
-                      {" "}
-                      ({applicant.email || "Email Not Specified"})
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 italic">No applicants yet.</p>
-            )}
-          </div>
-
+          {job.employer._id.toString() === userId && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                Applicants
+              </h2>
+              {job.applicants.length > 0 ? (
+                <ul className="list-disc pl-5 space-y-2">
+                  {job.applicants.map((applicant) => (
+                    <li key={applicant._id} className="text-gray-700">
+                      <span className="font-medium">
+                        {applicant.fullName || "Name Not Specified"}
+                      </span>
+                      <span className="text-gray-500">
+                        {" "}
+                        ({applicant.email || "Email Not Specified"})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 italic">No applicants yet.</p>
+              )}
+            </div>
+          )}
           {/* Apply Button */}
           <div className="text-center">
             <div className="text-center">

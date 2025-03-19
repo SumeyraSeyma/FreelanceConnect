@@ -6,8 +6,8 @@ import jobRoutes from "./routes/jobRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { app, server } from "./lib/socket.js";
 
-const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
@@ -22,7 +22,7 @@ app.use("/api/auth", authRoutes );
 app.use("/api/jobs", jobRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
