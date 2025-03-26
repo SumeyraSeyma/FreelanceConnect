@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { BriefcaseBusiness } from "lucide-react";
 import { useChatStore } from "../store/useChatStore";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const { users, getUsers } = useChatStore();
@@ -43,7 +44,7 @@ const Sidebar = () => {
               />
               <div className="flex flex-col justify-center">
                 <span className="min-w-56 ml-2 block items-center text-white font-normal text-center">
-                  {user.fullName}
+                  <Link to={`/profile/${user._id}`}>{user.fullName}</Link>
                 </span>
                 <span className="ml-2 italic block items-center text-white font-light text-center">
                   {truncateText(user.bio || "", 40)}

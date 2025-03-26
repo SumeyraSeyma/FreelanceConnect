@@ -70,4 +70,14 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
+
+  getUserProfile: async (id) => {
+    try {
+      const res = await axiosInstance.get(`/auth/profile/${id}`); 
+      return res.data;
+    } catch (error) {
+      console.log("Error fetching user profile:", error);
+      toast.error(error.response?.data?.message || 'Profile not found');
+    }
+  },
 }));
