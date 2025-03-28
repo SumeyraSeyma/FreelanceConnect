@@ -6,6 +6,7 @@ import io from "socket.io-client";
 const BASE_URL = "http://localhost:5000";
 
 export const useAuthStore = create((set, get) => ({
+  onlineUsers: [],
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
