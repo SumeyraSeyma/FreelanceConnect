@@ -6,6 +6,7 @@ import ProfilePage from "./pages/ProfilePage";
 import JobsPage from "./pages/JobsPage";
 import JobDetailPage from "./pages/JobDetailPage";
 import UserProfile from "./pages/UserProfile";
+import ChatPage from "./pages/ChatPage";
 import { Toaster } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
@@ -45,6 +46,7 @@ function App() {
         <Route path="/jobs" element={ authUser ? <JobsPage /> : <Navigate to="/login" /> } />
         <Route path="/jobs/:id" element={ authUser ? <JobDetailPage /> : <Navigate to="/login" /> } />
         <Route path="/profile/:id" element={ authUser ? <UserProfile /> : <Navigate to="/login" /> } />
+        <Route path="/messages" element={ authUser ? <ChatPage /> : <Navigate to="/login" /> } />
       </Routes>
 
       <Toaster />

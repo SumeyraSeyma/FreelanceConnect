@@ -1,19 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import Navbar from "../components/Navbar";
-import { MessageSquare, X } from "lucide-react";
+import { Circle, MessageSquare, X } from "lucide-react";
 import { useChatStore } from "../store/useChatStore";
 import MessageInput from "../components/MessageInput";
 
 const UserProfile = () => {
-  const { messages } = useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { messages, setSelectedUser, getMessages } = useChatStore();
+  const { onlineUsers, authUser, getUserProfile } = useAuthStore();
   const { id } = useParams();
-  const { getUserProfile } = useAuthStore();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(false);
+  const messageEndRef = useRef(null);
+
+  function formatTime(createdAt) {
+    const date = new Date(createdAt);
+  
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+    return `${hours}:${minutes}`;
+  }
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        if (id) {
+          await getMessages(id);
+        } else {
+          console.error("User ID is not defined");
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+  
+    fetchMessages(); 
+  }, [id, getMessages]);  
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -24,6 +50,7 @@ const UserProfile = () => {
           throw new Error("User data not found");
         }
         setUser(userData);
+        setSelectedUser(userData);
       } catch (error) {
         console.error("Error in fetchUserProfile:", error);
       } finally {
@@ -32,7 +59,7 @@ const UserProfile = () => {
     };
 
     fetchUserProfile();
-  }, [id, getUserProfile]);
+  }, [id, getUserProfile, setSelectedUser]);
 
   if (loading) {
     return (
@@ -95,7 +122,6 @@ const UserProfile = () => {
                     >
                       Send Message
                     </button>
-                    <button className="btn btn-outline">Save Profile</button>
                   </div>
                 </div>
               </div>
@@ -159,16 +185,31 @@ const UserProfile = () => {
                     <div className="avatar">
                       <div className="size-10 rounded-full relative">
                         <img
-                          src={user.image || "/avatar.png"}
+                          src={
+                            user.image ||
+                            "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
+                          }
                           alt={user.fullName}
                         />
                       </div>
                     </div>
                     <div>
                       <h3 className="font-medium">{user.fullName}</h3>
-                      <p className="text-sm text-base-content/70">
-                        {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-                      </p>
+                      <div className="text-sm text-base-content/70">
+                      
+                        {onlineUsers.includes(user._id) ?
+                        (
+                          <div className="flex items-center gap-1">
+                          <Circle className="text-green-500 size-4" />
+                          <span className="">Online</span>
+                          </div> )
+                         : 
+                         (
+                          <div className="flex items-center gap-1">
+                          <Circle className="text-gray-600 size-4" />
+                          <span className="">Offline</span>
+                          </div> )}
+                      </div>
                     </div>
                   </div>
                   <button onClick={() => setShowChat(false)}>
@@ -176,34 +217,54 @@ const UserProfile = () => {
                   </button>
                 </div>
               </div>
-              {messages.length ? (
-                <div className="overflow-y-auto h-96">
-                  {messages.map((message) => (
-                    <div
-                      key={message._id}
-                      className={`flex gap-2 mt-4 ${
-                        message.senderId === user._id ? "justify-start" : "justify-end"
-                      }`}
-                    >
-                      <div
-                        className={`p-2 rounded-lg ${
-                          message.senderId === user._id
-                            ? "bg-base-200 text-base-content"
-                            : "bg-primary text-primary-content"
-                        }`}
-                      >
-                        <p>{message.text}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
+              <div className="flex-1 p-4 space-y-4 overflow-y-auto h-72">
+              { messages.length > 0 ? (
+                      messages.map((message) => (
+                        <div
+                          key={message._id}
+                          className={`chat ${
+                            message.senderId === authUser._id ? "chat-end" : "chat-start"
+                          }`}
+                          ref={messageEndRef}
+                        >
+                          <div className="chat-image avatar">
+                            <div className="size-10 rounded-full border">
+                              <img
+                                src={
+                                  message.senderId === authUser._id
+                                    ? authUser.image || "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
+                                    : user.image || "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
+                                }
+                                alt="profile pic"
+                              />
+                            </div>
+                          </div>
+                          <div className="chat-header mb-1 ">
+                            <time className="text-xs opacity-50 ml-1">
+                              {formatTime(message.createdAt)}
+                            </time>
+                          </div>
+                          <div className="chat-bubble flex flex-col">
+                            {message.image&&(
+                              <img 
+                              src={message.image}
+                              alt="Attachment"
+                              className="sm:max-w-[200px] rounded-md mb-2"
+                              />
+                            )}
+                            {message.text && <p>{message.text}</p>}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
                 <div className="chat-container h-64 overflow-y-auto mb-4 border p-3 rounded items-center justify-center flex flex-col">
                     <MessageSquare  className="size-10"/>
                 <p className="text-base-content/60">No messages yet</p>
               </div>
               )  
+
               }
+                            </div>
               <MessageInput />
             </div>
           )}

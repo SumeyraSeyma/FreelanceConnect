@@ -6,6 +6,7 @@ import { useAuthStore } from "./useAuthStore";
 export const useChatStore = create((set, get) => ({
   users: [],
   messages: [],
+  chatUsers: [],
   selectedUser: null,
 
   isUsersLoading: false,
@@ -43,9 +44,19 @@ export const useChatStore = create((set, get) => ({
         `/messages/send/${selectedUser._id}`,
         messageData
       );
-      set({ messages: [...messages, res.data.newMessage] });
-      console.log("res.data:", res.data);
-      console.log("res.data.newMessage:", res.data.newMessage);
+
+      if (res.data && res.data.newMessage) {
+        set({ messages: [...messages, res.data.newMessage] });
+        console.log("res.data:", res.data);
+        console.log("res.data.newMessage:", res.data.newMessage);
+      } else {
+        console.error("Unexpected response format:", res.data);
+      }
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      toast.error(error.response?.data?.message || "Unknown error");
+    }
+  },
     } catch (error) {
       toast.error(error.response.data.message);
     }
