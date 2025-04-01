@@ -57,8 +57,17 @@ export const useChatStore = create((set, get) => ({
       toast.error(error.response?.data?.message || "Unknown error");
     }
   },
+
+  getChatUsers: async () => {
+    set({ isUsersLoading: true });
+    try {
+      const res = await axiosInstance.get("/messages/chat-users");
+      set({ chatUsers: res.data.users });
     } catch (error) {
       toast.error(error.response.data.message);
+      console.error("Error fetching chat users:", error.response.data.message);
+    } finally {
+      set({ isUsersLoading: false });
     }
   },
 

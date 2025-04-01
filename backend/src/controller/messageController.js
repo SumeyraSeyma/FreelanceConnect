@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getReceiverSocketId } from "../lib/socket.js";
 import { io } from "../lib/socket.js";
+import mongoose from "mongoose";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -15,7 +16,7 @@ export const getAllUsers = async (req, res) => {
     console.error("Error in getAllUsers route:", error.message);
     res.status(500).json({ message: "Server Error" });
   }
-}
+};
 
 export const getMessages = async (req, res) => {
   try {
@@ -66,5 +67,50 @@ export const sendMessage = async (req, res) => {
   } catch (error) {
     console.error("Error in sendMessage route:", error.message);
     res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const getChatUsers = async (req, res) => {
+  try {
+    const userId = req.user?._id.toString();
+    if (!userId) {
+      throw new Error("User ID is missing or undefined");
+    }
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw new Error(`Invalid ObjectId: ${userId}`);
+    }
+
+    const chatUsers = await Message.find({
+      $or: [
+        { senderId: new mongoose.Types.ObjectId(userId) },
+        { receiverId: new mongoose.Types.ObjectId(userId) },
+      ],
+    })
+      .populate("senderId", "fullName image")
+      .populate("receiverId", "fullName image");
+
+    const uniqueUserIds = [
+      ...new Set(
+        chatUsers.flatMap((msg) => [
+          msg.senderId._id.toString(),
+          msg.receiverId._id.toString(),
+        ])
+      ),
+    ].filter((id) => id !== userId);
+
+    const uniqueUsers = uniqueUserIds.map((id) => {
+      const msg = chatUsers.find(
+        (m) =>
+          m.senderId._id.toString() === id || m.receiverId._id.toString() === id
+      );
+      return msg.senderId._id.toString() === id ? msg.senderId : msg.receiverId;
+    });
+
+    res.status(200).json({ users: uniqueUsers });
+  } catch (error) {
+    console.error("getChatUsers error:", error.message);
+    res
+      .status(500)
+      .json({ message: "getChatUsers error", error: error.message });
   }
 };

@@ -6,10 +6,10 @@ const router = Router();
 
 router.get("/", protectRoute, getAllUsers);
 
+router.get("/chat-users", protectRoute, getChatUsers);
+
 router.get("/:id", protectRoute, getMessages);
 
 router.post("/send/:id", protectRoute, sendMessage);
-
-router.get("/chat-users", protectRoute, getChatUsers);
 
 export default router;
