@@ -15,9 +15,8 @@ const Sidebar = () => {
   }, [getChatUsers]);
 
   const displayedUsers = showOnlineOnly
-    ? chatUsers.filter((user) => onlineUsers.includes(user._id))
-    : chatUsers;
-
+  ? chatUsers.filter((user) => onlineUsers.includes(user._id)).slice().reverse()
+  : chatUsers.slice().reverse();
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
