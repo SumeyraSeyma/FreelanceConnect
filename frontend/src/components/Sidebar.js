@@ -9,14 +9,26 @@ const Sidebar = () => {
 
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getChatUsers();
   }, [getChatUsers]);
 
   const displayedUsers = showOnlineOnly
-  ? chatUsers.filter((user) => onlineUsers.includes(user._id)).slice().reverse()
-  : chatUsers.slice().reverse();
+    ? chatUsers
+        .filter((user) => onlineUsers.includes(user._id))
+        .filter((user) =>
+          user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+        ) 
+        .slice()
+        .reverse()
+    : chatUsers
+        .filter((user) =>
+          user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+        ) 
+        .slice()
+        .reverse();
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
@@ -39,6 +51,14 @@ const Sidebar = () => {
             ({onlineUsers.length - 1} online)
           </span>
         </div>
+        <label className="cursor-pointer flex items-center gap-2 mt-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="input input-sm w-full max-w-xs"
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </label>
       </div>
       <div className="overflow-y-auto w-full py-3">
         {displayedUsers.map((user) => (

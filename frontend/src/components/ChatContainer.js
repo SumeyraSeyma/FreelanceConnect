@@ -99,9 +99,9 @@ const ChatContainer = () => {
                   <img
                     src={
                       message.senderId === authUser._id
-                        ? authUser.profilePic ||
+                        ? authUser.image ||
                           "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
-                        : selectedUser.profilePic ||
+                        : selectedUser.image ||
                           "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
                     }
                     alt="profile pic"
