@@ -7,7 +7,7 @@ import { useChatStore } from "../store/useChatStore";
 import MessageInput from "../components/MessageInput";
 
 const UserProfile = () => {
-  const { messages, setSelectedUser, getMessages } = useChatStore();
+  const { messages, setUserSelected, getMessages } = useChatStore();
   const { onlineUsers, authUser, getUserProfile } = useAuthStore();
   const { id } = useParams();
   const [user, setUser] = useState(null);
@@ -47,19 +47,20 @@ const UserProfile = () => {
       try {
         const userData = await getUserProfile(id);
         if (!userData) {
-          throw new Error("User data not found");
+          throw new Error("User not found");
         }
-        setUser(userData);
-        setSelectedUser(userData);
+        setUser(userData); 
+        setUserSelected(userData);
       } catch (error) {
-        console.error("Error in fetchUserProfile:", error);
+        console.error("Error fetching user profile:", error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchUserProfile();
-  }, [id, getUserProfile, setSelectedUser]);
+  }, [id, getUserProfile, setUserSelected]);
+  
 
   if (loading) {
     return (
