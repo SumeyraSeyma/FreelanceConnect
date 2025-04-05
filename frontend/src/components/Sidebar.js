@@ -4,31 +4,48 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Users } from "lucide-react";
 
 const Sidebar = () => {
-  const { chatUsers, getChatUsers, selectedUser, setSelectedUser } =
-    useChatStore();
-
+  const {
+    chatUsers,
+    getChatUsers,
+    selectedUser,
+    setSelectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { onlineUsers } = useAuthStore();
+
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState(chatUsers);
 
   useEffect(() => {
     getChatUsers();
   }, [getChatUsers]);
 
-  const displayedUsers = showOnlineOnly
-    ? chatUsers
-        .filter((user) => onlineUsers.includes(user._id))
-        .filter((user) =>
-          user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-        ) 
-        .slice()
-        .reverse()
-    : chatUsers
-        .filter((user) =>
-          user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-        ) 
-        .slice()
-        .reverse();
+  useEffect(() => {
+    subscribeToMessages();
+    return () => unsubscribeFromMessages();
+  }, [subscribeToMessages, unsubscribeFromMessages]);
+
+  useEffect(() => {    
+    let updatedUsers = chatUsers.filter((user) =>
+      (user.fullName || "").toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  
+    if (showOnlineOnly) {
+      updatedUsers = updatedUsers.filter((user) =>
+        onlineUsers.includes(user._id)
+      );
+    }
+  
+    updatedUsers = updatedUsers.sort((a, b) => {
+      const lastMessageA = a.lastMessage ? new Date(a.lastMessage.createdAt) : new Date(0);
+      const lastMessageB = b.lastMessage ? new Date(b.lastMessage.createdAt) : new Date(0);
+      return lastMessageB - lastMessageA;
+    });
+  
+    setFilteredUsers(updatedUsers);
+  }, [showOnlineOnly, searchQuery, chatUsers, onlineUsers]);
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
@@ -52,16 +69,16 @@ const Sidebar = () => {
           </span>
         </div>
         <label className="cursor-pointer flex items-center gap-2 mt-2">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="input input-sm w-full max-w-xs"
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </label>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="input input-sm w-full max-w-xs"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </label>
       </div>
       <div className="overflow-y-auto w-full py-3">
-        {displayedUsers.map((user) => (
+        {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={() => setSelectedUser(user)}
@@ -92,7 +109,6 @@ const Sidebar = () => {
               )}
             </div>
 
-            {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">
@@ -101,7 +117,7 @@ const Sidebar = () => {
             </div>
           </button>
         ))}
-        {chatUsers.length === 0 && (
+        {filteredUsers.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No users found</div>
         )}
       </div>

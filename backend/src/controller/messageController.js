@@ -87,7 +87,8 @@ export const getChatUsers = async (req, res) => {
       ],
     })
       .populate("senderId", "fullName image")
-      .populate("receiverId", "fullName image");
+      .populate("receiverId", "fullName image")
+      .sort({ createdAt: -1 });
 
     const uniqueUserIds = [
       ...new Set(
@@ -106,11 +107,24 @@ export const getChatUsers = async (req, res) => {
       return msg.senderId._id.toString() === id ? msg.senderId : msg.receiverId;
     });
 
-    res.status(200).json({ users: uniqueUsers });
+    const sortedUsers = uniqueUsers.sort((a, b) => {
+      const lastMessageA = chatUsers.find(
+        (m) =>
+          m.senderId._id.toString() === a._id.toString() ||
+          m.receiverId._id.toString() === a._id.toString()
+      );
+      const lastMessageB = chatUsers.find(
+        (m) =>
+          m.senderId._id.toString() === b._id.toString() ||
+          m.receiverId._id.toString() === b._id.toString()
+      );
+      return (
+        new Date(lastMessageB.createdAt) - new Date(lastMessageA.createdAt)
+      );
+    });
+
+    res.status(200).json({ users: sortedUsers });
   } catch (error) {
-    console.error("getChatUsers error:", error.message);
-    res
-      .status(500)
-      .json({ message: "getChatUsers error", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
