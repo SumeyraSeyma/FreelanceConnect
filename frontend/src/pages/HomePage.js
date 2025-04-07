@@ -18,15 +18,14 @@ const HomePage = () => {
       <Navbar />
         <SwiperCarousel />
         <div className="flex h-screen px-16">
-          {/* Sol Sidebar */}
+          {/* Left Sidebar */}
           <div className="w-3/12 rounded-sm shadow-2xl p-4">
             <FilterSidebar />
           </div>
 
-          {/* Ana İçerik Artık Burada! */}
           <FilteredJobList />
 
-          {/* Sağ Sidebar */}
+          {/* Right Sidebar */}
           <div className="hidden lg:block w-3/12 rounded-sm shadow-2xl p-4">
             <EmployerSidebar />
           </div>

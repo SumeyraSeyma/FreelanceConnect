@@ -6,12 +6,15 @@ const FilteredJobList = () => {
   const { jobs, filters } = useJobStore();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
+  const [searchQuery, setSearchQuery] = useState("");
 
   const truncateText = (text = "", maxLength) => {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
   const filteredJobs = (jobs ?? []).filter((job) => {
+    if (searchQuery && !job.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      return false;
     if (filters.remote && !job.remote) return false;
     if (filters.partTime && job.time !== "part-time") return false;
     if (filters.fullTime && job.time !== "full-time") return false;
@@ -56,7 +59,17 @@ const FilteredJobList = () => {
 
   return (
     <div className="relative flex-1 mx-4 p-4 shadow-md mt-6">
+      <div className="flex justify-between items-center mb-4">
+            <label className="cursor-pointer flex p-2 items-center gap-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="input input-sm w-full max-w-md"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </label>
       <h1 className="text-2xl font-semibold text-center mb-4">Latest Jobs</h1>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {paginatedJobs.length > 0 ? (
