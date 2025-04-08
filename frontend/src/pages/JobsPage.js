@@ -31,8 +31,8 @@ const JobManager = () => {
     status: "open",
     skills: [],
     remote: false,
-    time:"full-time",
-    applicants:[]
+    time: "full-time",
+    applicants: [],
   });
   const [search, setSearch] = useState("");
   const [editingJob, setEditingJob] = useState(null);
@@ -65,8 +65,8 @@ const JobManager = () => {
       status: "open",
       skills: [],
       remote: false,
-      time:"full-time",
-      applicants:[]
+      time: "full-time",
+      applicants: [],
     });
     document.getElementById("modal_add").close();
   };
@@ -84,15 +84,15 @@ const JobManager = () => {
 
     const updatedJobData = {
       ...editingJob,
-      skills: editingJob.skills.length > 0 ? editingJob.skills : [], 
+      skills: editingJob.skills.length > 0 ? editingJob.skills : [],
     };
 
     console.log("Updated Job Data:", updatedJobData);
 
-    await updateJob(editingJob._id, updatedJobData); 
+    await updateJob(editingJob._id, updatedJobData);
 
-    setEditingJob(null); 
-    document.getElementById("modal_edit").close(); 
+    setEditingJob(null);
+    document.getElementById("modal_edit").close();
   };
 
   const filteredJobs = userJobs.filter(
@@ -103,75 +103,77 @@ const JobManager = () => {
       job.skills.join(", ").toLowerCase().includes(search.toLowerCase()) ||
       job.time.toLowerCase().includes(search.toLowerCase()) ||
       job.remote.toLowerCase().includes(search.toLowerCase())
-
   );
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-bl from-slate-800 to-cyan-900 text-white">
+    <div className="pt-20 bg-base-200 min-h-screen">
       <Navbar />
-      <div className="p-6">
-        <h1 className="text-4xl font-bold text-center mb-6">Job Manager</h1>
+      <div className="max-w-6xl mx-auto px-4 py-10 space-y-6">
+        <h1 className="text-4xl font-bold text-center mb-10 text-base-content">
+          Job Manager
+        </h1>
 
-        {/* Yeni İş Ekleme Butonu */}
-        <button
-          className="bg-green-800 p-3 rounded-lg mt-6 mb-6 ml-auto block"
-          onClick={() => document.getElementById("modal_add").showModal()}
-        >
-          {isCreatingJob ? "Adding..." : "Add Job"}
-        </button>
+        {/* Add Job Button */}
+        <div className="flex justify-end">
+          <button
+            className="btn btn-success"
+            onClick={() => document.getElementById("modal_add").showModal()}
+          >
+            {isCreatingJob ? "Adding..." : "Add Job"}
+          </button>
+        </div>
 
-        {/* Arama Çubuğu */}
+        {/* Search Input */}
         <input
           type="text"
           placeholder="Search for a job..."
-          className="w-full p-3 rounded-lg bg-slate-800 text-white mb-6"
+          className="input input-bordered w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        {/* İş Listesi */}
-        <div className="bg-slate-800 p-6 rounded-lg shadow-md">
+        {/* Job List Table */}
+        <div className="bg-base-100 p-6 rounded-xl shadow-xl overflow-x-auto">
           {isFetchingUserJobs ? (
             <p className="text-center text-gray-400">Loading jobs...</p>
           ) : (
-            <table className="w-full">
+            <table className="table w-full">
               <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="p-3 text-left">Title</th>
-                  <th className="p-3 text-left">description</th>
-                  <th className="p-3 text-left">Location</th>
-                  <th className="p-3 text-left">Budget</th>
-                  <th className="p-3 text-right">Skills</th>
-                  <th className="p-3 text-right">Time</th>
-                  <th className="p-3 text-right">Remote</th>
-                  <th className="p-3 text-right">Applicants</th>
-                  <th className="p-3 text-right">Actions</th>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Location</th>
+                  <th>Budget</th>
+                  <th>Skills</th>
+                  <th>Time</th>
+                  <th>Remote</th>
+                  <th>Applicants</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredJobs.map((job) => (
-                  <tr key={job._id} className="border-b border-gray-700">
-                    <td className="p-3">{job.title}</td>
-                    <td className="p-3">{job.description}</td>
-                    <td className="p-3">{job.location}</td>
-                    <td className="p-3">{job.budget}</td>
-                    <td className="p-3 text-right">{job.skills.join(", ")}</td>
-                    <td className="p-3 text-right">{job.time}</td>
-                    <td className="p-3 text-right">{job.remote ? "Yes" : "No"}</td>
-                    <td className="p-3 text-right">{job.applicants.length}</td>
-                    <td className="p-3 text-right">
+                  <tr key={job._id}>
+                    <td>{job.title}</td>
+                    <td>{job.description}</td>
+                    <td>{job.location}</td>
+                    <td>{job.budget}</td>
+                    <td>{job.skills.join(", ")}</td>
+                    <td>{job.time}</td>
+                    <td>{job.remote ? "Yes" : "No"}</td>
+                    <td>{job.applicants.length}</td>
+                    <td className="flex gap-2 justify-end">
                       <button
-                        className="bg-blue-800 px-3 py-1 rounded mr-2"
+                        className="btn btn-sm btn-primary"
                         onClick={() => {
-                          setEditingJob(job); // Seçili işi state'e ata
-                          document.getElementById("modal_edit").showModal(); 
+                          setEditingJob(job);
+                          document.getElementById("modal_edit").showModal();
                         }}
                       >
                         {isUpdatingJob ? "Updating..." : "Edit"}
                       </button>
-
                       <button
-                        className="bg-red-900 px-3 py-1 rounded"
+                        className="btn btn-sm btn-error"
                         onClick={() => deleteJob(job._id)}
                       >
                         {isDeletingJob ? "Deleting..." : "Delete"}
@@ -184,235 +186,242 @@ const JobManager = () => {
           )}
         </div>
 
-        {/* Yeni İş Ekleme Modalı */}
-        <dialog id="modal_add" className="modal bg-gray-900 text-white">
-          <div className="modal-box bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-lg font-semibold">Create New Job</h3>
-            <input
-              type="text"
-              placeholder="Job Title"
-              className="w-full p-2 rounded bg-gray-700 text-white my-2"
-              value={newJob.title}
-              onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Description"
-              className="w-full p-2 rounded bg-gray-700 text-white my-2"
-              value={newJob.description}
-              onChange={(e) =>
-                setNewJob({ ...newJob, description: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Location (Required)"
-              className="w-full p-2 rounded bg-gray-700 text-white my-2"
-              value={newJob.location}
-              onChange={(e) =>
-                setNewJob({ ...newJob, location: e.target.value })
-              }
-              required
-            />
-            <input
-              type="text"
-              placeholder="Budget"
-              className="w-full p-2 rounded bg-gray-700 text-white my-2"
-              value={newJob.budget}
-              onChange={(e) => setNewJob({ ...newJob, budget: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Skills (comma separated)"
-              className="w-full p-2 rounded bg-gray-700 text-white my-2"
-              value={newJob.skills.join(", ")}
-              onChange={(e) =>
-                setNewJob({
-                  ...newJob,
-                  skills: e.target.value
-                    .split(",")
-                    .map((skill) => skill.trim()),
-                })
-              }
-            />
-                        {/* Full-time / Part-time Checkbox */}
-                        <div className="flex gap-4 my-4">
-              <div>
-                <input
-                  type="radio"
-                  id="full-time"
-                  name="time"
-                  value="full-time"
-                  checked={newJob.time === "full-time"}
-                  onChange={(e) => setNewJob({ ...newJob, time: e.target.value })}
-                />
-                <label htmlFor="full-time" className="ml-2">Full-time</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="part-time"
-                  name="time"
-                  value="part-time"
-                  checked={newJob.time === "part-time"}
-                  onChange={(e) => setNewJob({ ...newJob, time: e.target.value })}
-                />
-                <label htmlFor="part-time" className="ml-2">Part-time</label>
-              </div>
-            </div>
+        {/* Add Job Modal */}
+        <dialog id="modal_add" className="modal">
+          <div className="modal-box bg-base-100 text-base-content rounded-xl">
+            <h3 className="text-lg font-semibold mb-4">Create New Job</h3>
 
-            {/* Remote Checkbox */}
-            <div className="flex gap-4 my-4">
+            <form method="dialog" className="space-y-4">
               <input
-                type="checkbox"
-                id="remote"
-                checked={newJob.remote}
-                onChange={() => setNewJob({ ...newJob, remote: !newJob.remote })}
+                type="text"
+                placeholder="Job Title"
+                className="input input-bordered w-full"
+                value={newJob.title}
+                onChange={(e) =>
+                  setNewJob({ ...newJob, title: e.target.value })
+                }
               />
-              <label htmlFor="remote" className="ml-2">Remote</label>
-            </div>
+              <input
+                type="text"
+                placeholder="Description"
+                className="input input-bordered w-full"
+                value={newJob.description}
+                onChange={(e) =>
+                  setNewJob({ ...newJob, description: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Location (Required)"
+                className="input input-bordered w-full"
+                value={newJob.location}
+                onChange={(e) =>
+                  setNewJob({ ...newJob, location: e.target.value })
+                }
+                required
+              />
+              <input
+                type="text"
+                placeholder="Budget"
+                className="input input-bordered w-full"
+                value={newJob.budget}
+                onChange={(e) =>
+                  setNewJob({ ...newJob, budget: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Skills (comma separated)"
+                className="input input-bordered w-full"
+                value={newJob.skills.join(", ")}
+                onChange={(e) =>
+                  setNewJob({
+                    ...newJob,
+                    skills: e.target.value.split(",").map((s) => s.trim()),
+                  })
+                }
+              />
 
-            <div className="flex gap-2 mt-4">
-              <button
-                className="bg-green-600 p-2 rounded"
-                onClick={handleAddJob}
-              >
-                Add
-              </button>
-              <button
-                className="bg-gray-600 p-2 rounded"
-                onClick={() => document.getElementById("modal_add").close()}
-              >
-                Cancel
-              </button>
-            </div>
-            {/* İş Güncelleme Modalı */}
-            <dialog id="modal_edit" className="modal bg-gray-900 text-white">
-              <div className="modal-box bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold">Edit Job</h3>
-                <input
-                  type="text"
-                  placeholder="Job Title"
-                  className="w-full p-2 rounded bg-gray-700 text-white my-2"
-                  value={editingJob?.title || ""}
-                  onChange={(e) =>
-                    setEditingJob({ ...editingJob, title: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Description"
-                  className="w-full p-2 rounded bg-gray-700 text-white my-2"
-                  value={editingJob?.description || ""}
-                  onChange={(e) =>
-                    setEditingJob({
-                      ...editingJob,
-                      description: e.target.value,
-                    })
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Location"
-                  className="w-full p-2 rounded bg-gray-700 text-white my-2"
-                  value={editingJob?.location || ""}
-                  onChange={(e) =>
-                    setEditingJob({ ...editingJob, location: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Budget"
-                  className="w-full p-2 rounded bg-gray-700 text-white my-2"
-                  value={editingJob?.budget || ""}
-                  onChange={(e) =>
-                    setEditingJob({ ...editingJob, budget: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Skills (comma separated)"
-                  className="w-full p-2 rounded bg-gray-700 text-white my-2"
-                  value={editingJob?.skills.join(", ") || ""}
-                  onChange={(e) =>
-                    setEditingJob({
-                      ...editingJob,
-                      skills: e.target.value
-                        .split(",")
-                        .map((skill) => skill.trim()),
-                    })
-                  }
-                />
-                {/* Full-time / Part-time Checkbox */}
-                <div className="flex gap-4 my-4">
-                  <div>
-                    <input
-                      type="radio"
-                      id="full-time"
-                      name="time"
-                      value="full-time"
-                      checked={editingJob?.time === "full-time"}
-                      onChange={(e) =>
-                        setEditingJob({
-                          ...editingJob,
-                          time: e.target.value,
-                        })
-                      }
-                    />
-                    <label htmlFor="full-time" className="ml-2">Full-time</label>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="part-time"
-                      name="time"
-                      value="part-time"
-                      checked={editingJob?.time === "part-time"}
-                      onChange={(e) =>
-                        setEditingJob({
-                          ...editingJob,
-                          time: e.target.value,
-                        })
-                      }
-                    />
-                    <label htmlFor="part-time" className="ml-2">Part-time</label>
-                  </div>
-                </div>
-
-                {/* Remote Checkbox */}
-                <div className="flex gap-4 my-4">
+              {/* Time Options */}
+              <div className="flex items-center gap-6">
+                <label className="label cursor-pointer flex items-center gap-2">
                   <input
-                    type="checkbox"
-                    id="remote"
-                    checked={editingJob?.remote}
-                    onChange={() =>
-                      setEditingJob({
-                        ...editingJob,
-                        remote: !editingJob.remote,
-                      })
+                    type="radio"
+                    name="time"
+                    className="radio"
+                    value="full-time"
+                    checked={newJob.time === "full-time"}
+                    onChange={(e) =>
+                      setNewJob({ ...newJob, time: e.target.value })
                     }
                   />
-                  <label htmlFor="remote" className="ml-2">Remote</label>
-                </div>
-
-                <div className="flex gap-2 mt-4">
-                  <button
-                    className="bg-blue-600 p-2 rounded"
-                    onClick={handleUpdateJob}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="bg-gray-600 p-2 rounded"
-                    onClick={() =>
-                      document.getElementById("modal_edit").close()
+                  <span>Full-time</span>
+                </label>
+                <label className="label cursor-pointer flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="time"
+                    className="radio"
+                    value="part-time"
+                    checked={newJob.time === "part-time"}
+                    onChange={(e) =>
+                      setNewJob({ ...newJob, time: e.target.value })
                     }
-                  >
-                    Cancel
-                  </button>
-                </div>
+                  />
+                  <span>Part-time</span>
+                </label>
               </div>
-            </dialog>
+
+              {/* Remote Option */}
+              <label className="label cursor-pointer flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={newJob.remote}
+                  onChange={() =>
+                    setNewJob({ ...newJob, remote: !newJob.remote })
+                  }
+                />
+                <span>Remote</span>
+              </label>
+
+              {/* Action Buttons */}
+              <div className="modal-action flex justify-end gap-3">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={handleAddJob}
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => document.getElementById("modal_add").close()}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </dialog>
+
+        {/* Edit Job Modal */}
+        <dialog id="modal_edit" className="modal">
+          <div className="modal-box bg-base-100 text-base-content rounded-xl">
+            <h3 className="text-lg font-semibold mb-4">Edit Job</h3>
+
+            <form method="dialog" className="space-y-4">
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Job Title"
+                value={editingJob?.title || ""}
+                onChange={(e) =>
+                  setEditingJob({ ...editingJob, title: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Description"
+                value={editingJob?.description || ""}
+                onChange={(e) =>
+                  setEditingJob({ ...editingJob, description: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Location"
+                value={editingJob?.location || ""}
+                onChange={(e) =>
+                  setEditingJob({ ...editingJob, location: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Budget"
+                value={editingJob?.budget || ""}
+                onChange={(e) =>
+                  setEditingJob({ ...editingJob, budget: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Skills (comma separated)"
+                value={editingJob?.skills.join(", ") || ""}
+                onChange={(e) =>
+                  setEditingJob({
+                    ...editingJob,
+                    skills: e.target.value.split(",").map((s) => s.trim()),
+                  })
+                }
+              />
+
+              {/* Time Options */}
+              <div className="flex items-center gap-6">
+                <label className="label cursor-pointer flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="edit_time"
+                    className="radio"
+                    value="full-time"
+                    checked={editingJob?.time === "full-time"}
+                    onChange={(e) =>
+                      setEditingJob({ ...editingJob, time: e.target.value })
+                    }
+                  />
+                  <span>Full-time</span>
+                </label>
+                <label className="label cursor-pointer flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="edit_time"
+                    className="radio"
+                    value="part-time"
+                    checked={editingJob?.time === "part-time"}
+                    onChange={(e) =>
+                      setEditingJob({ ...editingJob, time: e.target.value })
+                    }
+                  />
+                  <span>Part-time</span>
+                </label>
+              </div>
+
+              {/* Remote Option */}
+              <label className="label cursor-pointer flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={editingJob?.remote}
+                  onChange={() =>
+                    setEditingJob({ ...editingJob, remote: !editingJob.remote })
+                  }
+                />
+                <span>Remote</span>
+              </label>
+
+              {/* Action Buttons */}
+              <div className="modal-action flex justify-end gap-3">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleUpdateJob}
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => document.getElementById("modal_edit").close()}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </dialog>
       </div>
