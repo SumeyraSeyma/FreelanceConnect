@@ -27,7 +27,7 @@ const Sidebar = () => {
       <div className="w-full p-5">
         <div className="flex w-72 items-end gap-2 shadow-sm shadow-white p-4 rounded-lg">
           <BriefcaseBusiness className="size-6" />
-          <span className="font-medium hidden lg:block">Open to work</span>
+          <span className="font-medium hidden lg:block italic">Open to work</span>
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4 p-4">
@@ -35,7 +35,7 @@ const Sidebar = () => {
           {randomUsers.map((user) => (
             <li
               key={user.id}
-              className="p-2 shadow-rose-950 w-72 h-20 flex rounded-lg shadow-md text-white transition"
+              className="p-2 shadow-cyan-600 shadow-sm w-72 h-20 flex rounded-lg text-white transition"
             >
               <img
                 className="w-10 h-10 rounded-full"

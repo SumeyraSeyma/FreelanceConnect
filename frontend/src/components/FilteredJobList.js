@@ -13,7 +13,10 @@ const FilteredJobList = () => {
   };
 
   const filteredJobs = (jobs ?? []).filter((job) => {
-    if (searchQuery && !job.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    if (
+      searchQuery &&
+      !job.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
       return false;
     if (filters.remote && !job.remote) return false;
     if (filters.partTime && job.time !== "part-time") return false;
@@ -60,15 +63,17 @@ const FilteredJobList = () => {
   return (
     <div className="relative flex-1 mx-4 p-4 shadow-md mt-6">
       <div className="flex justify-between items-center mb-4">
-            <label className="cursor-pointer flex p-2 items-center gap-2">
+        <label className="cursor-pointer flex p-2 items-center gap-2">
           <input
             type="text"
             placeholder="Search..."
-            className="input input-sm w-full max-w-md"
+            className="input input-sm w-full max-w-xl bg-base-100 italic h-8"
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </label>
-      <h1 className="text-2xl font-semibold text-center mb-4">Latest Jobs</h1>
+        <h1 className="text-2xl font-semibold text-center mb-4 text-slate-300 italic">
+          Latest Jobs
+        </h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
@@ -76,7 +81,7 @@ const FilteredJobList = () => {
           paginatedJobs.map((job) => (
             <div
               key={job.id}
-              className="rounded-md shadow-white shadow-sm p-4 flex flex-col h-full"
+              className="rounded-md shadow-cyan-600 shadow-sm p-4 flex flex-col h-full bg-base-100"
             >
               <Link to={`/jobs/${job._id}`}>
                 <h2 className="text-xl font-semibold min-h-14">{job.title}</h2>
@@ -87,7 +92,7 @@ const FilteredJobList = () => {
                   {job.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className="bg-gray-300 text-gray-800 px-2 py-1 rounded-md"
+                      className="bg-gray-300 text-gray-800 px-2 py-1 rounded-md italic"
                     >
                       {skill}
                     </span>
@@ -100,7 +105,7 @@ const FilteredJobList = () => {
                 {truncateText(job.description, 90)}
               </span>
               <div className="flex justify-between items-center">
-                <span className="shadow-rose-950 shadow-md p-2">
+                <span className="shadow-cyan-600 shadow-md p-2">
                   {job.status}
                 </span>
               </div>
@@ -114,7 +119,7 @@ const FilteredJobList = () => {
       {totalPages > 1 && (
         <div className="xl:absolute xl:bottom-4 xl:ml-48 flex justify-center items-center gap-4 mt-6">
           <button
-            className="px-4 py-2 bg-rose-950 text-white rounded-md disabled:bg-gray-400"
+            className="px-4 py-2 bg-cyan-600 text-white rounded-md disabled:bg-gray-400"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
           >
@@ -126,7 +131,7 @@ const FilteredJobList = () => {
           </span>
 
           <button
-            className="px-4 py-2 bg-rose-950 text-white rounded-md disabled:bg-gray-400"
+            className="px-4 py-2 bg-cyan-600 text-white rounded-md disabled:bg-gray-400"
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >

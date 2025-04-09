@@ -5,7 +5,7 @@ import { Autoplay } from "swiper/modules";
 
 export default function SwiperCarousel() {
   return (
-    <div className="container mx-auto px-16">
+    <div className="container mx-auto px-16 py-8">
       <Swiper
         modules={[Autoplay]}
         autoplay={{ delay: 4000, disableOnInteraction: false }}

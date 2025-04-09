@@ -10,12 +10,12 @@ const FilterSidebar = () => {
       <div className="w-full p-5">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="size-7" />
-          <span className="font-medium hidden lg:block">Filters</span>
+          <span className="font-medium hidden lg:block italic">Filters</span>
         </div>
       </div>
       <div className="overflow-y-auto w-full py-3 flex-col flex">
         {/* Remote */}
-        <label className="cursor-pointer flex items-center gap-2 mb-5">
+        <label className="cursor-pointer flex items-center gap-2 mb-5 italic">
           <input
             type="checkbox"
             checked={filters.remote}
@@ -25,7 +25,7 @@ const FilterSidebar = () => {
           <span>Remote</span>
         </label>
         {/* Part-time */}
-        <label className="cursor-pointer flex items-center gap-2 mb-5">
+        <label className="cursor-pointer flex items-center gap-2 mb-5 italic">
           <input
             type="checkbox"
             checked={filters.partTime}
@@ -35,7 +35,7 @@ const FilterSidebar = () => {
           <span>Part-time</span>
         </label>
         {/* Full-time */}
-        <label className="cursor-pointer flex items-center gap-2 mb-5">
+        <label className="cursor-pointer flex items-center gap-2 mb-5 italic">
           <input
             type="checkbox"
             checked={filters.fullTime}
@@ -45,8 +45,8 @@ const FilterSidebar = () => {
           <span>Full-time</span>
         </label>
         {/* Budget */}
-        <label className="flex flex-col mb-5">
-          <span className="font-medium">Minimum Budget</span>
+        <label className="flex flex-col mb-5 italic">
+          <span className="font-medium mb-1">Minimum Budget</span>
           <input
             type="number"
             value={filters.budget}
@@ -56,18 +56,18 @@ const FilterSidebar = () => {
                 e.target.value ? parseInt(e.target.value, 10) : ""
               )
             }
-            className="border rounded-md p-2 bg-slate-800"
+            className="border rounded-md p-2 bg-base-300 italic"
             placeholder="Enter minimum budget"
           />
         </label>
 
         {/* City Filter */}
-        <label className="flex flex-col mb-5">
-          <span className="font-medium">City</span>
+        <label className="flex flex-col mb-5 italic">
+          <span className="font-medium mb-1">City</span>
           <select
             value={filters.city}
             onChange={(e) => setFilter("city", e.target.value)}
-            className="border rounded-md p-2 bg-slate-800"
+            className="border rounded-md p-2 bg-base-300 italic"
           >
             <option value="">Select city</option>
             {Array.from(new Set(jobs.flatMap((job) => job.location))).map(
@@ -81,11 +81,11 @@ const FilterSidebar = () => {
         </label>
         {/* Skill Filter */}
         <label className="flex flex-col mb-5">
-          <span className="font-medium">Skill</span>
+          <span className="font-medium mb-1 italic">Skill</span>
           <select
             value={filters.skill}
             onChange={(e) => setFilter("skill", e.target.value)}
-            className="border rounded-md p-2 bg-slate-800"
+            className="border rounded-md p-2 bg-base-300 italic"
           >
             <option value="">Select skill</option>
             {Array.from(new Set(jobs.flatMap((job) => job.skills))).map(
@@ -99,11 +99,11 @@ const FilterSidebar = () => {
         </label>
         {/* Status Filter */}
         <label className="flex flex-col mb-5">
-          <span className="font-medium">Status</span>
+          <span className="font-medium mb-1 italic">Status</span>
           <select
             value={filters.status}
             onChange={(e) => setFilter("status", e.target.value)}
-            className="border rounded-md p-2 bg-slate-800"
+            className="border rounded-md p-2 bg-base-300 italic"
           >
             <option value="">Select status</option>
             <option value="open">Open</option>
@@ -113,7 +113,7 @@ const FilterSidebar = () => {
         {/* Clear Filters Button */}
         <button
           onClick={clearFilters}
-          className="bg-rose-950 text-white px-4 py-2 rounded-md mt-4"
+          className="bg-cyan-600 text-white px-4 py-2 rounded-md mt-4"
         >
           Clear Filters
         </button>

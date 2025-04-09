@@ -14,19 +14,20 @@ const HomePage = () => {
   }, [fetchAllJobs]);
 
   return (
-    <div className="bg-gradient-to-bl from-slate-800 to-cyan-900">
+    <div className="flex flex-col bg-base-200">
       <Navbar />
         <SwiperCarousel />
         <div className="flex h-screen px-16">
           {/* Left Sidebar */}
-          <div className="w-3/12 rounded-sm shadow-2xl p-4">
+          <div className="w-3/12 rounded-sm shadow-2xl p-4 bg-base-100">
             <FilterSidebar />
           </div>
 
+          {/* Main Content */}
           <FilteredJobList />
 
           {/* Right Sidebar */}
-          <div className="hidden lg:block w-3/12 rounded-sm shadow-2xl p-4">
+          <div className="hidden lg:block w-3/12 rounded-sm shadow-2xl p-4 bg-base-100">
             <EmployerSidebar />
           </div>
         </div>
