@@ -43,8 +43,7 @@ const JobManager = () => {
       !newJob.description ||
       !newJob.location ||
       !newJob.budget ||
-      !newJob.time ||
-      !newJob.remote
+      !newJob.time 
     ) {
       toast.error("Please fill all the required fields!");
       return;

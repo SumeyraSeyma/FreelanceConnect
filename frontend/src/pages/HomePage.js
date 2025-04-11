@@ -19,7 +19,7 @@ const HomePage = () => {
         <SwiperCarousel />
         <div className="flex h-screen px-16">
           {/* Left Sidebar */}
-          <div className="w-3/12 rounded-sm shadow-2xl p-4 bg-base-100">
+          <div className="w-3/12 rounded-sm shadow-md p-4 bg-base-100 shadow-slate-300">
             <FilterSidebar />
           </div>
 
@@ -27,7 +27,7 @@ const HomePage = () => {
           <FilteredJobList />
 
           {/* Right Sidebar */}
-          <div className="hidden lg:block w-3/12 rounded-sm shadow-2xl p-4 bg-base-100">
+          <div className="hidden lg:block w-3/12 rounded-sm shadow-md p-4 bg-base-100 shadow-slate-300">
             <EmployerSidebar />
           </div>
         </div>
