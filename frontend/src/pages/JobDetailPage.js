@@ -47,21 +47,21 @@ const JobDetail = () => {
     return <div className="text-center p-6 text-gray-500">Job not found.</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-bl from-slate-800 to-cyan-900 shadow-lg shadow-cyan-90">
+    <div className="min-h-screen bg-base-200 text-base-content pt-20">
       {/* Navbar */}
       <Navbar />
 
       {/* Main Container */}
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white shadow-xl rounded-xl mt-14 p-8 transition-all hover:shadow-2xl">
+        <div className="bg-base-100 shadow-xl rounded-xl mt-14 p-8 transition-all hover:shadow-2xl">
           {/* Job Title and Status */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-4 mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">{job.title}</h1>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-cyan-600 pb-4 mb-6">
+            <h1 className="text-3xl font-bold">{job.title}</h1>
             <span
               className={`mt-2 sm:mt-0 px-4 py-1 rounded-full text-sm font-semibold ${
                 job.status === "open"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-green-200 text-green-800"
+                  : "bg-red-200 text-red-800"
               }`}
             >
               {job.status.toUpperCase()}
@@ -71,41 +71,37 @@ const JobDetail = () => {
           {/* Employer and Details */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-gray-600">
+              <p>
                 <span className="font-semibold">Employer:</span>{" "}
-                <span className="text-gray-800">{job.employer.fullName}</span>
+                <span>{job.employer.fullName}</span>
               </p>
             </div>
             <div className="flex flex-col sm:items-end">
-              <p className="text-gray-600">
+              <p>
                 <span className="font-semibold">📅 Posted Date:</span>{" "}
-                <span className="text-gray-800">{formattedDate}</span>
+                <span>{formattedDate}</span>
               </p>
-              <p className="text-gray-600 mt-1">
+              <p className="mt-1">
                 <span className="font-semibold">💰 Budget:</span>{" "}
-                <span className="text-gray-800 font-bold">${job.budget}</span>
+                <span className="font-bold">${job.budget}</span>
               </p>
             </div>
           </div>
 
           {/* Job Description */}
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Job Description
-            </h2>
-            <p className="text-gray-700 leading-relaxed">{job.description}</p>
+            <h2 className="text-xl font-semibold mb-2">Job Description</h2>
+            <p className="leading-relaxed">{job.description}</p>
           </div>
 
           {/* Required Skills */}
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Required Skills
-            </h2>
+            <h2 className="text-xl font-semibold mb-2">Required Skills</h2>
             <div className="flex flex-wrap gap-2">
               {job.skills.map((skill, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                  className="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-sm font-medium"
                 >
                   {skill}
                 </span>
@@ -116,17 +112,15 @@ const JobDetail = () => {
           {/* Applicants */}
           {job.employer._id.toString() === userId && (
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                Applicants
-              </h2>
+              <h2 className="text-xl font-semibold mb-2">Applicants</h2>
               {job.applicants.length > 0 ? (
                 <ul className="list-disc pl-5 space-y-2">
                   {job.applicants.map((applicant) => (
-                    <li key={applicant._id} className="text-gray-700">
+                    <li key={applicant._id}>
                       <span className="font-medium">
                         {applicant.fullName || "Name Not Specified"}
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-base-content/60">
                         {" "}
                         ({applicant.email || "Email Not Specified"})
                       </span>
@@ -134,48 +128,48 @@ const JobDetail = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500 italic">No applicants yet.</p>
+                <p className="italic text-base-content/60">
+                  No applicants yet.
+                </p>
               )}
             </div>
           )}
+
           {/* Apply Button */}
           <div className="text-center">
-            <div className="text-center">
-              {job.status === "open" ? (
-                // Eğer kullanıcı ilan sahibiyse veya başvuru yaptıysa buton devre dışı olacak
-                job.employer._id.toString() === userId ? (
-                  <button
-                    className="px-6 py-3 bg-gray-300 text-gray-600 rounded-lg font-semibold cursor-not-allowed"
-                    disabled
-                  >
-                    You are the Employer
-                  </button>
-                ) : job.applicants.some(
-                    (applicant) => applicant._id.toString() === userId
-                  ) ? (
-                  <button
-                    className="px-6 py-3 bg-gray-300 text-gray-600 rounded-lg font-semibold cursor-not-allowed"
-                    disabled
-                  >
-                    Already Applied
-                  </button>
-                ) : (
-                  <button
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
-                    onClick={() => applyJob(job._id)}
-                  >
-                    {isApplyingJob ? "Applying..." : "Apply Now"}
-                  </button>
-                )
-              ) : (
+            {job.status === "open" ? (
+              job.employer._id.toString() === userId ? (
                 <button
-                  className="px-6 py-3 bg-gray-300 text-gray-600 rounded-lg font-semibold cursor-not-allowed"
+                  className="px-6 py-3 bg-base-300 text-base-content/50 rounded-lg font-semibold cursor-not-allowed"
                   disabled
                 >
-                  Application Closed
+                  You are the Employer
                 </button>
-              )}
-            </div>
+              ) : job.applicants.some(
+                  (applicant) => applicant._id.toString() === userId
+                ) ? (
+                <button
+                  className="px-6 py-3 bg-base-300 text-base-content/50 rounded-lg font-semibold cursor-not-allowed"
+                  disabled
+                >
+                  Already Applied
+                </button>
+              ) : (
+                <button
+                  className="px-6 py-3 bg-cyan-600 text-base-100 rounded-lg font-semibold hover:brightness-110 transition-colors duration-200"
+                  onClick={() => applyJob(job._id)}
+                >
+                  {isApplyingJob ? "Applying..." : "Apply Now"}
+                </button>
+              )
+            ) : (
+              <button
+                className="px-6 py-3 bg-base-300 text-base-content/50 rounded-lg font-semibold cursor-not-allowed"
+                disabled
+              >
+                Application Closed
+              </button>
+            )}
           </div>
         </div>
       </div>

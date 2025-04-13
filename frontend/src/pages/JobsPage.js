@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useJobStore } from "../store/useJobStore";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const JobManager = () => {
   const {
@@ -37,13 +38,16 @@ const JobManager = () => {
   const [search, setSearch] = useState("");
   const [editingJob, setEditingJob] = useState(null);
 
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
+
   const handleAddJob = async () => {
     if (
       !newJob.title ||
       !newJob.description ||
       !newJob.location ||
-      !newJob.budget ||
-      !newJob.time 
+      !newJob.budget
     ) {
       toast.error("Please fill all the required fields!");
       return;
@@ -100,8 +104,7 @@ const JobManager = () => {
       job.description.toLowerCase().includes(search.toLowerCase()) ||
       job.location.toLowerCase().includes(search.toLowerCase()) ||
       job.skills.join(", ").toLowerCase().includes(search.toLowerCase()) ||
-      job.time.toLowerCase().includes(search.toLowerCase()) ||
-      job.remote.toLowerCase().includes(search.toLowerCase())
+      job.time.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -153,11 +156,18 @@ const JobManager = () => {
               <tbody>
                 {filteredJobs.map((job) => (
                   <tr key={job._id}>
-                    <td>{job.title}</td>
-                    <td>{job.description}</td>
+                    <Link to={`/jobs/${job._id}`} className="hover:underline">
+                      <td>{job.title}</td>
+                    </Link>
+
+                    <td className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
+                      {truncateText(job.description, 30)}
+                    </td>
                     <td>{job.location}</td>
                     <td>{job.budget}</td>
-                    <td>{job.skills.join(", ")}</td>
+                    <td className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
+                      {job.skills.join(", ")}
+                    </td>
                     <td>{job.time}</td>
                     <td>{job.remote ? "Yes" : "No"}</td>
                     <td>{job.applicants.length}</td>
@@ -200,14 +210,17 @@ const JobManager = () => {
                   setNewJob({ ...newJob, title: e.target.value })
                 }
               />
-              <input
+              <textarea
+                rows={3}
                 type="text"
                 placeholder="Description"
-                className="input input-bordered w-full"
+                className="w-full resize-none rounded-lg p-3 text-sm bg-base-100 border border-base-300 text-base-content focus:outline-none focus:ring-2 focus:ring-cyan-600 overflow-y-auto"
                 value={newJob.description}
                 onChange={(e) =>
                   setNewJob({ ...newJob, description: e.target.value })
                 }
+                maxLength={200}
+                required
               />
               <input
                 type="text"
@@ -218,6 +231,7 @@ const JobManager = () => {
                   setNewJob({ ...newJob, location: e.target.value })
                 }
                 required
+                maxLength={50}
               />
               <input
                 type="text"
@@ -239,6 +253,7 @@ const JobManager = () => {
                     skills: e.target.value.split(",").map((s) => s.trim()),
                   })
                 }
+                maxLength={50}
               />
 
               {/* Time Options */}
@@ -272,17 +287,19 @@ const JobManager = () => {
               </div>
 
               {/* Remote Option */}
-              <label className="label cursor-pointer flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={newJob.remote}
-                  onChange={() =>
-                    setNewJob({ ...newJob, remote: !newJob.remote })
-                  }
-                />
-                <span>Remote</span>
-              </label>
+              <div className="flex items-center gap-6">
+                <label className="label cursor-pointer flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={newJob.remote}
+                    onChange={() =>
+                      setNewJob({ ...newJob, remote: !newJob.remote })
+                    }
+                  />
+                  <span>Remote</span>
+                </label>
+              </div>
 
               {/* Action Buttons */}
               <div className="modal-action flex justify-end gap-3">
@@ -319,10 +336,13 @@ const JobManager = () => {
                 onChange={(e) =>
                   setEditingJob({ ...editingJob, title: e.target.value })
                 }
+                maxLength={50}
+                required
               />
-              <input
+              <textarea
+                rows={3}
                 type="text"
-                className="input input-bordered w-full"
+                className="w-full resize-none rounded-lg p-3 text-sm bg-base-100 border border-base-300 text-base-content focus:outline-none focus:ring-2 focus:ring-cyan-600 overflow-y-auto"
                 placeholder="Description"
                 value={editingJob?.description || ""}
                 onChange={(e) =>
@@ -337,6 +357,8 @@ const JobManager = () => {
                 onChange={(e) =>
                   setEditingJob({ ...editingJob, location: e.target.value })
                 }
+                maxLength={50}
+                required
               />
               <input
                 type="text"
@@ -391,17 +413,22 @@ const JobManager = () => {
               </div>
 
               {/* Remote Option */}
-              <label className="label cursor-pointer flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={editingJob?.remote}
-                  onChange={() =>
-                    setEditingJob({ ...editingJob, remote: !editingJob.remote })
-                  }
-                />
-                <span>Remote</span>
-              </label>
+              <div className="flex items-center gap-6">
+                <label className="label  flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="checkbox cursor-pointer"
+                    checked={editingJob?.remote}
+                    onChange={() =>
+                      setEditingJob({
+                        ...editingJob,
+                        remote: !editingJob.remote,
+                      })
+                    }
+                  />
+                  <span>Remote</span>
+                </label>
+              </div>
 
               {/* Action Buttons */}
               <div className="modal-action flex justify-end gap-3">
