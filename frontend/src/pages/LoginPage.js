@@ -9,6 +9,8 @@ import {
   Megaphone,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import ReCaptcha from "../components/ReCaptcha";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,11 +19,23 @@ const LoginPage = () => {
     password: "",
   });
 
-  const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn, reCaptcha } = useAuthStore();
+  const [captchaValue, setCaptchaValue] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+
+    if (!captchaValue) {
+      toast.error("Please complete the CAPTCHA.");
+      return;
+    }
+
+    try {
+      await reCaptcha(captchaValue);
+      login(formData);
+    } catch (error) {
+      toast.error("CAPTCHA verification failed. Please try again.");
+    }
   };
 
   return (
@@ -103,6 +117,9 @@ const LoginPage = () => {
                 </button>
               </div>
             </div>
+
+            {/* ReCAPTCHA */}
+            <ReCaptcha onChange={setCaptchaValue} />  
 
             <button
               type="submit"
