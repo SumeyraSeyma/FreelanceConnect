@@ -35,6 +35,11 @@ const LoginPage = () => {
       login(formData);
     } catch (error) {
       toast.error("CAPTCHA verification failed. Please try again.");
+      if (error.response && error.response.status === 429) {
+        toast.error("Too many login attempts. Please try again later.");
+      } else {
+        toast.error(error.response?.data?.message || "Login failed. Please try again.");
+      }
     }
   };
 

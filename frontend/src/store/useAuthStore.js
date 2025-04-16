@@ -50,7 +50,11 @@ export const useAuthStore = create((set, get) => ({
       get().connectSocket();
       toast.success("Logged in successfully");
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response.status === 429) {
+        toast.error("Too many login attempts. Please try again later.");
+      } else  {
+        toast.error("Invalid email or password.");
+      }
     } finally {
       set({ isLoggingIn: false });
     }
