@@ -24,6 +24,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.dismiss(); // Önceki bildirimleri temizle
 
     if (!captchaValue) {
       toast.error("Please complete the CAPTCHA.");
@@ -31,10 +32,14 @@ const LoginPage = () => {
     }
 
     try {
-      await reCaptcha(captchaValue);
-      login(formData);
+      const captchaResponse = await reCaptcha(captchaValue);
+      if (!captchaResponse.success) {
+        toast.error(captchaResponse?.message || "CAPTCHA verification failed. Please try again.");
+        return;
+      }
+
+      await login(formData);
     } catch (error) {
-      toast.error("CAPTCHA verification failed. Please try again.");
       if (error.response && error.response.status === 429) {
         toast.error("Too many login attempts. Please try again later.");
       } else {

@@ -46,6 +46,8 @@ app.post("/api/verify-captcha", async (req, res) => {
       }
     });
 
+    console.log("Google reCAPTCHA response:", response.data); // Debug için log ekle
+
     if (response.data.success) {
       return res.json({ success: true });
     } else {

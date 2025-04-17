@@ -121,13 +121,10 @@ export const useAuthStore = create((set, get) => ({
   reCaptcha : async (captchaValue) => {
     try {
       const res = await axiosInstance.post("/verify-captcha", { captcha: captchaValue });
-      if (res.data.success) {
-        toast.success("CAPTCHA verified successfully!");
-      } else {
-        toast.error("CAPTCHA verification failed. Please try again.");
-      }
+      return res.data;
     } catch (error) {
-      toast.error("Error verifying CAPTCHA");
+      console.log("reCaptcha error:", error);
+      return { success: false, message: "Error verifying CAPTCHA" };
     }
   }
 }));
