@@ -102,7 +102,7 @@ const UserProfile = () => {
             <div className="card-body">
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="avatar">
-                  <div className="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                  <div className="w-32 rounded-full ring bg-cyan-600 ring-offset-base-100 ring-offset-2">
                     <img
                       src={
                         user.image ||
@@ -118,7 +118,7 @@ const UserProfile = () => {
                   </h1>
                   <div className="mt-4 flex gap-2 pt-6">
                     <button
-                      className="btn btn-primary"
+                      className="btn bg-cyan-600 hover:bg-cyan-700 rounded-md shadow-lg border border-base-300"
                       onClick={() => setShowChat(true)}
                     >
                       Send Message
@@ -143,7 +143,7 @@ const UserProfile = () => {
                     user.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="badge badge-lg badge-secondary"
+                        className="badge badge-lg bg-cyan-600 p-4"
                       >
                         {skill}
                       </span>

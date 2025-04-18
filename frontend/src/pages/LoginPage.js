@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import {
-  Eye,
-  EyeClosed,
-  Loader2,
-  Lock,
-  Mail,
-  Megaphone,
-} from "lucide-react";
+import { Eye, EyeClosed, Loader2, Lock, Mail, Megaphone } from "lucide-react";
 import { Link } from "react-router-dom";
 import ReCaptcha from "../components/ReCaptcha";
 import toast from "react-hot-toast";
@@ -34,7 +27,10 @@ const LoginPage = () => {
     try {
       const captchaResponse = await reCaptcha(captchaValue);
       if (!captchaResponse.success) {
-        toast.error(captchaResponse?.message || "CAPTCHA verification failed. Please try again.");
+        toast.error(
+          captchaResponse?.message ||
+            "CAPTCHA verification failed. Please try again."
+        );
         return;
       }
 
@@ -43,43 +39,49 @@ const LoginPage = () => {
       if (error.response && error.response.status === 429) {
         toast.error("Too many login attempts. Please try again later.");
       } else {
-        toast.error(error.response?.data?.message || "Login failed. Please try again.");
+        toast.error(
+          error.response?.data?.message || "Login failed. Please try again."
+        );
       }
     }
   };
 
   return (
-    <div className="min-h-screen grid  bg-gradient-to-bl from-slate-800 to-cyan-900 lg:grid-cols-2">
+    <div className="min-h-screen grid bg-base-200 text-base-content lg:grid-cols-2">
       {/* Left side */}
-      <div className="flex flex-col justify-center items-center p-6  sm:p-12">
-        <Megaphone className="size-16 mb-3" />
-        <h1 className="text-4xl font-bold text-white">
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12  ">
+        <Megaphone className="size-16 mb-3 text-cyan-600" />
+        <h1 className="text-4xl font-bold text-base-content">
           Let Your Skills Meet the World
         </h1>
         <p className="text-base-content/60 mt-4">
           The easiest way to find jobs and showcase your talents.
         </p>
         <div className="mt-1 text-center">
-          <p className="text-base-content/60">Don&apos;t have an account? </p>
-          <button className="btn rounded-md shadow-lg mt-1 border border-zinc-400 bg-rose-950 hover:bg-pink-950 w-full">
+          <p className="text-base-content/60">Don't have an account? </p>
+          <button className="btn rounded-md shadow-lg mt-1 border border-base-300 bg-cyan-600 hover:bg-cyan-700 w-full">
             <Link to="/signup">Sign Up</Link>
           </button>
         </div>
       </div>
       {/* right side */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-        <div className="w-full max-w-md space-y-8 border border-gray-500 shadow-2xl rounded-xl p-14">
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12 ">
+        <div className="w-full max-w-md space-y-8 border border-base-300 shadow-xl rounded-xl p-14 bg-base-100 border-cyan-600 ">
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
-              <h1 className="text-2xl font-bold">Welcome Back</h1>
+              <h1 className="text-2xl font-bold text-base-content">
+                Welcome Back
+              </h1>
               <p className="text-base-content/60">Sign in to your account</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Email</span>
+                <span className="label-text font-medium text-base-content">
+                  Email
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -87,7 +89,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type="email"
-                  className={`w-full pl-10 bg-slate-800 font-size: 0.875rem h-10 rounded-md mt-1`}
+                  className="w-full pl-10 bg-base-100 border-cyan-600 border  text-base-content font-size: 0.875rem h-10 rounded-md mt-1 focus:outline-none focus:ring-2 focus:ring-cyan-600"
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) =>
@@ -99,7 +101,9 @@ const LoginPage = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Password</span>
+                <span className="label-text font-medium text-base-content">
+                  Password
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -107,7 +111,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`w-full pl-10 bg-slate-800 font-size: 0.875rem h-10 rounded-md mt-1`}
+                  className="w-full pl-10 bg-base-100 border-cyan-600 border text-base-content font-size: 0.875rem h-10 rounded-md mt-1 focus:outline-none focus:ring-2 focus:ring-cyan-600"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) =>
@@ -129,11 +133,11 @@ const LoginPage = () => {
             </div>
 
             {/* ReCAPTCHA */}
-            <ReCaptcha onChange={setCaptchaValue} />  
+            <ReCaptcha onChange={setCaptchaValue} />
 
             <button
               type="submit"
-              className="btn shadow-xl rounded-md bg-rose-950 hover:bg-pink-950 border border-zinc-400 w-full"
+              className="btn shadow-xl rounded-md bg-cyan-600 hover:bg-cyan-700 border border-base-300 w-full"
               disabled={isLoggingIn}
               onClick={handleSubmit}
             >
@@ -146,7 +150,7 @@ const LoginPage = () => {
                 "Sign In"
               )}
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
