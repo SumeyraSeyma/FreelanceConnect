@@ -102,7 +102,7 @@ const FilteredJobList = () => {
                 <span className="text-gray-400">No skills required</span>
               )}
               <span className="italic flex-grow inline-block min-h-20">
-                {truncateText(job.description, 90)}
+                {truncateText(job.description, 150)}
               </span>
               <div className="flex justify-between items-center">
                 <span className="shadow-cyan-600 shadow-md p-2">
@@ -117,7 +117,7 @@ const FilteredJobList = () => {
       </div>
 
       {totalPages > 1 && (
-        <div className="xl:absolute xl:bottom-4 xl:ml-48 flex justify-center items-center gap-4 mt-6">
+        <div className="xl:absolute xl:bottom-4 xl:ml-80 flex justify-center items-center gap-4 mt-6">
           <button
             className="px-4 py-2 bg-cyan-600 text-white rounded-md disabled:bg-gray-400"
             disabled={currentPage === 1}

@@ -1,28 +1,17 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import Navbar from "../components/Navbar";
-import { Circle, MessageSquare, X } from "lucide-react";
 import { useChatStore } from "../store/useChatStore";
-import MessageInput from "../components/MessageInput";
+import { Link } from "react-router-dom";
+import EmployerSidebar from "../components/EmployerSidebar";
 
 const UserProfile = () => {
-  const { messages, setUserSelected, getMessages } = useChatStore();
-  const { onlineUsers, authUser, getUserProfile } = useAuthStore();
+  const { setSelectedUser, getMessages } = useChatStore();
+  const { getUserProfile } = useAuthStore();
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showChat, setShowChat] = useState(false);
-  const messageEndRef = useRef(null);
-
-  function formatTime(createdAt) {
-    const date = new Date(createdAt);
-  
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-  
-    return `${hours}:${minutes}`;
-  }
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -50,7 +39,7 @@ const UserProfile = () => {
           throw new Error("User not found");
         }
         setUser(userData); 
-        setUserSelected(userData);
+        setSelectedUser(userData);
       } catch (error) {
         console.error("Error fetching user profile:", error);
       } finally {
@@ -59,7 +48,7 @@ const UserProfile = () => {
     };
   
     fetchUserProfile();
-  }, [id, getUserProfile, setUserSelected]);
+  }, [id, getUserProfile, setSelectedUser]);
   
 
   if (loading) {
@@ -89,15 +78,11 @@ const UserProfile = () => {
       <Navbar />
       <div className="container mx-auto px-4 pt-12">
         <div
-          className={`flex flex-col lg:flex-row gap-6 transition-all duration-500 ${
-            showChat ? "justify-between" : "justify-center"
-          }`}
+          className={`flex flex-col lg:flex-row gap-6 transition-all duration-500 justify-center `}
         >
           {/* Profile Card */}
           <div
-            className={`card bg-base-100 shadow-xl transition-all duration-500 ${
-              showChat ? "lg:w-1/2 transform scale-95" : "w-full max-w-2xl p-6"
-            }`}
+            className={`card bg-base-100 shadow-xl transition-all duration-500 w-full max-w-2xl p-6`}
           >
             <div className="card-body">
               <div className="flex flex-col md:flex-row gap-6">
@@ -117,12 +102,13 @@ const UserProfile = () => {
                     {user.fullName || "Name Not Provided"}
                   </h1>
                   <div className="mt-4 flex gap-2 pt-6">
-                    <button
+                    <Link to={`/messages`} >
+                    <div
                       className="btn bg-cyan-600 hover:bg-cyan-700 rounded-md shadow-lg border border-base-300"
-                      onClick={() => setShowChat(true)}
                     >
                       Send Message
-                    </button>
+                    </div>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -177,98 +163,10 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {/* Chat Box */}
-          {showChat && (
-            <div className="lg:w-1/2 bg-base-100 shadow-xl rounded-xl p-6 animate-fade-slide-in">
-              <div className="p-2.5 border-b border-base-300">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="size-10 rounded-full relative">
-                        <img
-                          src={
-                            user.image ||
-                            "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
-                          }
-                          alt={user.fullName}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{user.fullName}</h3>
-                      <div className="text-sm text-base-content/70">
-                      
-                        {onlineUsers.includes(user._id) ?
-                        (
-                          <div className="flex items-center gap-1">
-                          <Circle className="text-green-500 size-4" />
-                          <span className="">Online</span>
-                          </div> )
-                         : 
-                         (
-                          <div className="flex items-center gap-1">
-                          <Circle className="text-gray-600 size-4" />
-                          <span className="">Offline</span>
-                          </div> )}
-                      </div>
-                    </div>
-                  </div>
-                  <button onClick={() => setShowChat(false)}>
-                    <X />
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 p-4 space-y-4 overflow-y-auto h-72">
-              { messages.length > 0 ? (
-                      messages.map((message) => (
-                        <div
-                          key={message._id}
-                          className={`chat ${
-                            message.senderId === authUser._id ? "chat-end" : "chat-start"
-                          }`}
-                          ref={messageEndRef}
-                        >
-                          <div className="chat-image avatar">
-                            <div className="size-10 rounded-full border">
-                              <img
-                                src={
-                                  message.senderId === authUser._id
-                                    ? authUser.image || "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
-                                    : user.image || "https://st.depositphotos.com/1537427/3571/v/950/depositphotos_35717211-stock-illustration-vector-user-icon.jpg"
-                                }
-                                alt="profile pic"
-                              />
-                            </div>
-                          </div>
-                          <div className="chat-header mb-1 ">
-                            <time className="text-xs opacity-50 ml-1">
-                              {formatTime(message.createdAt)}
-                            </time>
-                          </div>
-                          <div className="chat-bubble flex flex-col">
-                            {message.image&&(
-                              <img 
-                              src={message.image}
-                              alt="Attachment"
-                              className="sm:max-w-[200px] rounded-md mb-2"
-                              />
-                            )}
-                            {message.text && <p>{message.text}</p>}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                <div className="chat-container h-64 overflow-y-auto mb-4 border p-3 rounded items-center justify-center flex flex-col">
-                    <MessageSquare  className="size-10"/>
-                <p className="text-base-content/60">No messages yet</p>
-              </div>
-              )  
-
-              }
-                            </div>
-              <MessageInput />
-            </div>
-          )}
+                    {/* Right Sidebar */}
+                    <div >
+            <EmployerSidebar />
+          </div>
         </div>
       </div>
     </div>
